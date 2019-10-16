@@ -1,3 +1,3 @@
 # Puppet CIS
 
-Automated CIS setup for the CentOS Linux 7 Benchmark v2.2.0
+Automated CIS setup for CentOS. The various branches defines for which CentOS and CIS version
