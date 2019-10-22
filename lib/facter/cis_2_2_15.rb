@@ -6,7 +6,7 @@
 Facter.add('cis_2_2_15') do
   ipv4 = Facter::Core::Execution.exec('netstat -an | grep "[[:space:]]127.0.0.1:25[[:space:]]"')
   ipv6 = Facter::Core::Execution.exec('netstat -an | grep "[[:space:]]::1:25[[:space:]]"')
-  if ' 127.0.0.1:25' =~ ipv4 || ' ::1:25' =~ ipv6
+  if ' 127.0.0.1:25' =~ /#{ipv4}/ || ' ::1:25' =~ /#{ipv6}/
     false
   else
     true
