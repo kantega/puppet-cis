@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# This file is automically generated and updated by puppet
+# any local changes will be removed
+
+<%- if @string_to_grep != '' -%>
+df --local -P | awk {'if (NR!=1) print $6'} | grep -v '<%= @string_to_grep %>' | xargs -I '{}' find '{}' -xdev -nogroup
+<%- else -%>
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup
+<%- end -%>

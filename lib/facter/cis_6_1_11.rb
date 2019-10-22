@@ -5,5 +5,7 @@
 # remove all files owned by those users from the system.
 
 Facter.add('cis_6_1_11') do
-  setcode "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser"
+  setcode do
+    Facter::Core::Execution.exec('/usr/local/bin/cis_6_1_11.sh')
+  end
 end
