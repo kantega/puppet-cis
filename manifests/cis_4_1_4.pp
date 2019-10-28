@@ -21,7 +21,13 @@ class cis::cis_4_1_4 (
 ) {
 
   if $enforced {
-
+    file { 'ensure audit.rules file exists':
+      ensure => file,
+      path   => '/etc/audit/audit.rules',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0640',
+    }
     # 64 bit architecture
     if $facts['architecture'] =~ /64/ {
 
