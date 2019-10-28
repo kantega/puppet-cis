@@ -21,6 +21,8 @@ class cis (
   # 3.6 Firewall Configuration
   Boolean $cis_3_6_enforced                     = true,
   Boolean $cis_4_enforced                       = true,
+  # 4.1 Configure System Accounting
+  Boolean $cis_4_1_enforced                     = true,
   # 4.2 Configure Logging
   Boolean $cis_4_2_enforced                     = true,
   Boolean $cis_5_enforced                       = true,
@@ -170,26 +172,28 @@ class cis (
     include ::cis::cis_3_7
   }
   if $cis_4_enforced {
-    include ::cis::cis_4_1_1_1
-    include ::cis::cis_4_1_1_2
-    include ::cis::cis_4_1_1_3
-    include ::cis::cis_4_1_2
-    include ::cis::cis_4_1_3
-    include ::cis::cis_4_1_4
-    include ::cis::cis_4_1_5
-    include ::cis::cis_4_1_6
-    include ::cis::cis_4_1_7
-    include ::cis::cis_4_1_8
-    include ::cis::cis_4_1_9
-    include ::cis::cis_4_1_10
-    include ::cis::cis_4_1_11
-    include ::cis::cis_4_1_12
-    include ::cis::cis_4_1_13
-    include ::cis::cis_4_1_14
-    include ::cis::cis_4_1_15
-    include ::cis::cis_4_1_16
-    include ::cis::cis_4_1_17
-    include ::cis::cis_4_1_18
+    if $cis_4_1_enforced {
+      include ::cis::cis_4_1_1_1
+      include ::cis::cis_4_1_1_2
+      include ::cis::cis_4_1_1_3
+      include ::cis::cis_4_1_2
+      include ::cis::cis_4_1_3
+      include ::cis::cis_4_1_4
+      include ::cis::cis_4_1_5
+      include ::cis::cis_4_1_6
+      include ::cis::cis_4_1_7
+      include ::cis::cis_4_1_8
+      include ::cis::cis_4_1_9
+      include ::cis::cis_4_1_10
+      include ::cis::cis_4_1_11
+      include ::cis::cis_4_1_12
+      include ::cis::cis_4_1_13
+      include ::cis::cis_4_1_14
+      include ::cis::cis_4_1_15
+      include ::cis::cis_4_1_16
+      include ::cis::cis_4_1_17
+      include ::cis::cis_4_1_18
+    }
     if $cis_4_2_enforced {
       include ::cis::cis_4_2_1_1
       include ::cis::cis_4_2_1_2

@@ -18,6 +18,11 @@ class cis::cis_4_1_18 (
   Boolean $enforced = true,
 ) {
   if $enforced {
+    exec { 'disable modification of audit rules with auditctl':
+      command => '/usr/bin/echo \'-e 2\' >> /etc/audit/audit.rules',
+      unless  => '/usr/bin/tail -n 1 /etc/audit/audit.rules | /usr/bin/grep \'^-e 2$\'',
+      user    => 'root',
+    }
     if $facts['cis_4_1_18'] {
       notify { 'cis_4_1_18':
         message  => 'Not in compliance with CIS 4.1.18 (Scored). System audit rules can be modified with auditctl',
@@ -26,3 +31,4 @@ class cis::cis_4_1_18 (
     }
   }
 }
+
