@@ -20,7 +20,7 @@ class cis::cis_1_5_2 (
     if ($facts['cis_1_5_2'].empty) {
       notify { 'cis_1_5_2':
         message => 'Not in compliance with CIS 1.5.2 (Not scored). Verify that No Execute (or Execute Disable, for some Intel processors) protection is enabled', #lint:ignore:140chars
-        logevel => 'warning',
+        loglevel => 'warning',
       }
     }
   }
