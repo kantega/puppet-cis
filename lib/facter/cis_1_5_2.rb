@@ -4,5 +4,5 @@
 # 1.5.2 Ensure XD/NX support is enabled
 
 Facter.add('cis_1_5_2') do
-  setcode '/usr/bin/dmesg | /usr/bin/grep "NX.*protection: active"'
+  setcode '/usr/bin/grep "NX.*protection: active" /var/log/messages*'
 end
