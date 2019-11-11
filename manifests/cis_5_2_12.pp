@@ -36,6 +36,7 @@ class cis::cis_5_2_12 (
       path   => '/etc/ssh/sshd_config',
       line   => "ClientAliveInterval ${client_alive_interval}",
       match  => '^#?ClientAliveInterval',
+      notify => Service['sshd'],
     }
 
     file_line { 'ssh alive count max':
@@ -43,6 +44,7 @@ class cis::cis_5_2_12 (
       path   => '/etc/ssh/sshd_config',
       line   => "ClientAliveCountMax ${client_alive_count_max}",
       match  => '^#?ClientAliveCountMax',
+      notify => Service['sshd'],
     }
   }
 }

@@ -23,6 +23,7 @@ class cis::cis_5_2_2 (
       path   => '/etc/ssh/sshd_config',
       line   => 'Protocol 2',
       match  => '^Protocol.*',
+      notify => Service['sshd'],
     }
   }
 }

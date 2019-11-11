@@ -48,6 +48,7 @@ class cis::cis_5_2_11 (
       path   => '/etc/ssh/sshd_config',
       line   => "MACs ${mac_algorithm_array}",
       match  => '^#?MACs',
+      notify => Service['sshd'],
     }
   }
 }

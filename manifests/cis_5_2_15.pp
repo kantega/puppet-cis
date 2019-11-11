@@ -18,10 +18,11 @@ class cis::cis_5_2_15 (
 
   if $enforced {
     file_line { 'ssh warning banner':
-        ensure => 'present',
-        path   => '/etc/ssh/sshd_config',
-        line   => 'Banner /etc/issue.net',
-        match  => '^#?Banner',
+      ensure => 'present',
+      path   => '/etc/ssh/sshd_config',
+      line   => 'Banner /etc/issue.net',
+      match  => '^#?Banner',
+      notify => Service['sshd'],
     }
   }
 }

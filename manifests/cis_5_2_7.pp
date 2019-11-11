@@ -19,10 +19,11 @@ class cis::cis_5_2_7 (
   if $enforced {
 
     file_line { 'ssh host based authentication':
-        ensure => 'present',
-        path   => '/etc/ssh/sshd_config',
-        line   => 'HostbasedAuthentication no',
-        match  => '^HostbasedAuthentication',
+      ensure => 'present',
+      path   => '/etc/ssh/sshd_config',
+      line   => 'HostbasedAuthentication no',
+      match  => '^HostbasedAuthentication',
+      notify => Service['sshd'],
     }
   }
 }

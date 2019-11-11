@@ -22,6 +22,7 @@ class cis::cis_5_2_6 (
       path   => '/etc/ssh/sshd_config',
       line   => 'IgnoreRhosts yes',
       match  => '^#?IgnoreRhosts',
+      notify => Service['sshd'],
     }
   }
 }

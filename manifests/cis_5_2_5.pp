@@ -20,10 +20,11 @@ class cis::cis_5_2_5 (
   if $enforced {
 
     file_line { 'ssh max auth tries':
-    ensure => present,
-    path   => '/etc/ssh/sshd_config',
-    line   => "MaxAuthTries ${max_auth_tries}",
-    match  => '^#?MaxAuthTries',
+      ensure => present,
+      path   => '/etc/ssh/sshd_config',
+      line   => "MaxAuthTries ${max_auth_tries}",
+      match  => '^#?MaxAuthTries',
+      notify => Service['sshd'],
     }
   }
 }

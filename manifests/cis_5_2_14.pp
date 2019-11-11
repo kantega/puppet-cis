@@ -53,6 +53,7 @@ class cis::cis_5_2_14 (
           path   => '/etc/ssh/sshd_config',
           line   => "AllowUsers ${user_list_allow}",
           match  => '^#?AllowUsers',
+          notify => Service['sshd'],
         }
       }
       if $allow_groups != [] {
@@ -62,6 +63,7 @@ class cis::cis_5_2_14 (
           path   => '/etc/ssh/sshd_config',
           line   => "AllowGroups ${group_list_allow}",
           match  => '^#?AllowGroups',
+          notify => Service['sshd'],
         }
       }
       if $deny_users != [] {
@@ -71,6 +73,7 @@ class cis::cis_5_2_14 (
           path   => '/etc/ssh/sshd_config',
           line   => "DenyUsers ${user_list_deny}",
           match  => '^#?DenyUsers',
+          notify => Service['sshd'],
         }
       }
       if $deny_groups != [] {
@@ -80,6 +83,7 @@ class cis::cis_5_2_14 (
           path   => '/etc/ssh/sshd_config',
           line   => "DenyUsers ${group_list_deny}",
           match  => '^#?DenyUsers',
+          notify => Service['sshd'],
         }
       }
     }
