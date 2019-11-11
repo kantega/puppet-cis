@@ -220,7 +220,7 @@ class cis (
     include ::cis::cis_5_1_7
     include ::cis::cis_5_1_8
     if $cis_5_2_enforced {
-      include ::cis::cis_5__1
+      include ::cis::cis_5_2_1
       include ::cis::cis_5_2_2
       include ::cis::cis_5_2_3
       include ::cis::cis_5_2_4
