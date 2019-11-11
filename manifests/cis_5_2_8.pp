@@ -13,6 +13,7 @@
 #   include cis::5_2_8
 class cis::cis_5_2_8 (
   Boolean $enforced = true,
+  Enum['no','yes','without-password'] $setting = 'no',
 ) {
 
   if $enforced {
@@ -20,7 +21,7 @@ class cis::cis_5_2_8 (
     file_line { 'ssh permit root login':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => 'PermitRootLogin no',
+      line   => "PermitRootLogin ${setting}",
       match  => '^#?PermitRootLogin',
       notify => Service['sshd'],
     }
