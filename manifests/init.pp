@@ -10,6 +10,8 @@
 
 class cis (
   Boolean $cis_1_enforced                       = true,
+  # 1.3 Filesystem Integrity Checking
+  Boolean $cis_1_3_enforced                     = true,
   # 1.6.1 Configure SELinux
   Boolean $cis_1_6_1_enforced                   = true,
   # 1.6.2 Ensure SELinux is installed
@@ -68,8 +70,10 @@ class cis (
       include ::cis::cis_1_2_1
       include ::cis::cis_1_2_2
       include ::cis::cis_1_2_3
-      include ::cis::cis_1_3_1
-      include ::cis::cis_1_3_2
+      if $cis_1_3_enforced {
+          include ::cis::cis_1_3_1
+          include ::cis::cis_1_3_2
+      }
       include ::cis::cis_1_4_1
       include ::cis::cis_1_4_3
       include ::cis::cis_1_5_1
