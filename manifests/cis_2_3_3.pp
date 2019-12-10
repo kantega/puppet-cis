@@ -1,13 +1,14 @@
-# 2.3.3 Ensure talk client is not installed (Scored)
+# 2.3.3 Ensure LDAP client is not installed (Scored)
 #
 # Description:
-# The talk software makes it possible for users to send and receive messages across systems through a terminal session.
-# The talk client, which allows initialization of talk sessions, is installed by default.
+# The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP.
+# It is a service that provides a method for looking up information from a central database.
 #
 # Rationale:
-# The software presents a security risk as it uses unencrypted protocols for communication.
+# If the system will not need to act as an LDAP client, it is recommended that the software
+# be removed to reduce the potential attack surface.
 #
-# @summary 2.3.3 Ensure talk client is not installed (Scored)
+# @summary 2.3.3 Ensure LDAP client is not installed (Scored)
 #
 # @example
 #   include cis::2_3_3
@@ -16,7 +17,7 @@ class cis::cis_2_3_3 (
 ) {
 
   if $enforced {
-    package { 'talk':
+    package { 'openldap-clients':
       ensure => purged,
     }
   }

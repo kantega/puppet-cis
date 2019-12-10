@@ -1,14 +1,12 @@
-# 2.2.6 Ensure LDAP server is not enabled (Scored)
+# 2.2.6 Ensure HTTP Proxy Server is not enabled (Scored)
 #
 # Description:
-# The Lightweight Directory Access Protocol (LDAP) was introduced as a replacement for NIS/YP.
-# It is a service that provides a method for looking up information from a central database.
+# Squid is a standard proxy server used in many distributions and environments.
 #
 # Rationale:
-# If the system will not need to act as an LDAP server,
-# it is recommended that the software be disabled to reduce the potential attack surface.
+# If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface.
 #
-# @summary 2.2.6 Ensure LDAP server is not enabled (Scored)
+# @summary 2.2.6 Ensure HTTP Proxy Server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_6
@@ -17,7 +15,14 @@ class cis::cis_2_2_6 (
 ) {
 
   if $enforced {
-    service { 'slapd':
+
+    $http_proxy_services = [
+      'squid',
+      'tinyproxy',
+      '3proxy'
+    ]
+
+    service { $http_proxy_services:
       ensure => stopped,
       enable => false,
     }

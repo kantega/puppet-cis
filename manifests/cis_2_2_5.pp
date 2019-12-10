@@ -1,13 +1,15 @@
-# 2.2.5 Ensure DHCP Server is not enabled (Scored)
+# 2.2.5 Ensure SNMP Server is not enabled (Scored)
 #
 # Description:
-# The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses.
+# The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system,
+# execute the commands or collect the information and then send results back to the requesting system.
 #
 # Rationale:
-# Unless a system is specifically set up to act as a DHCP server,
-# it is recommended that this service be disabled to reduce the potential attack surface.
+# The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands.
+# Unless absolutely necessary, it is recommended that the SNMP service not be used.
+# If SNMP is required the server should be configured to disallow SNMP v1.
 #
-# @summary 2.2.5 Ensure DHCP Server is not enabled (Scored)
+# @summary 2.2.5 Ensure SNMP Server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_5
@@ -16,7 +18,8 @@ class cis::cis_2_2_5 (
 ) {
 
   if $enforced {
-    service { 'dhcpd':
+
+    service { 'snmpd':
       ensure => stopped,
       enable => false,
     }

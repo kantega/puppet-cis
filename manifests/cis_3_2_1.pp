@@ -28,8 +28,18 @@ class cis::cis_3_2_1 (
       value => 0,
     }->sysctl { 'net.ipv4.conf.default.accept_source_route':
       value => 0,
-    }~>exec { 'cis_3_2_1 route flush':
+    }~>exec { 'cis_3_2_1 ipv4 route flush':
       command     => 'sysctl -w net.ipv4.route.flush=1',
+      refreshonly => true,
+      user        => 'root',
+      path        => '/usr/sbin',
+    }
+    sysctl { 'net.ipv6.conf.all.accept_source_route':
+      value => 0,
+    }->sysctl { 'net.ipv6.conf.default.accept_source_route':
+      value => 0,
+    }~>exec { 'cis_3_2_1 ipv6 route flush':
+      command     => 'sysctl -w net.ipv6.route.flush=1',
       refreshonly => true,
       user        => 'root',
       path        => '/usr/sbin',

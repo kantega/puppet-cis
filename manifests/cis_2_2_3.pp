@@ -1,16 +1,12 @@
-# 2.2.3 Ensure Avahi Server is not enabled (Scored)
+# 2.2.3 Ensure rsync service is not enabled (Scored)
 #
 # Description:
-# Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery.
-# Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration.
-# For example, a user can plug a computer into a network and Avahi automatically finds printers to print to,
-# files to look at and people to talk to, as well as network services running on the machine.
+# The rsyncd service can be used to synchronize files between systems over network links.
 #
 # Rationale:
-# Automatic discovery of network services is not normally required for system functionality.
-# It is recommended to disable the service to reduce the potential attack surface.
+# The rsyncd service presents a security risk as it uses unencrypted protocols for communication.
 #
-# @summary 2.2.3 Ensure Avahi Server is not enabled (Scored)
+# @summary 2.2.3 Ensure rsync service is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_3
@@ -19,7 +15,7 @@ class cis::cis_2_2_3 (
 ) {
 
   if $enforced {
-    service { 'avahi-daemon':
+    service { 'rsyncd':
       ensure => stopped,
       enable => false,
     }

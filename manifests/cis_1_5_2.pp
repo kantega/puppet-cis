@@ -1,27 +1,33 @@
-# 1.5.2 Ensure XD/NX support is enabled (Not Scored)
+# 1.5.2 Ensure bootloader password is set (Scored)
 #
 #
 # Description:
-# Recent processors in the x86 family support the ability to prevent code execution on a per memory page basis.
-# Generically and on AMD processors, this ability is called No Execute (NX), while on Intel processors it is called Execute Disable (XD).
-# This ability can help prevent exploitation of buffer overflow vulnerabilities and should be activated whenever possible.
-# Extra steps must be taken to ensure that this protection is enabled, particularly on 32-bit x86 systems. Other processors, such
-# as # Itanium and POWER, have included such support since inception and the standard kernel for those platforms supports the feature.
+# Setting the boot loader password will require that anyone rebooting the system must enter a password
+# before being able to set command line boot parameters
 #
-# @summary 1.5.2 Ensure XD/NX support is enabled (Not Scored)
+# @summary 1.5.2 Ensure bootloader password is set (Scored)
 #
 # @example
 #   include cis::1_5_2
 class cis::cis_1_5_2 (
   Boolean $enforced = true,
+  String $grub_password = undef,
 ) {
 
   if $enforced {
-    if ($facts['cis_1_5_2'].empty) {
+    if $grub_password != undef {
+      file_line { 'GRUB2_PASSWORD':
+        path  => '/boot/grub2/user.cfg',
+        line  => "GRUB2_PASSWORD=${grub_password}",
+        match => '^GRUB2_PASSWORD',
+      }
+    }
+    else {
       notify { 'cis_1_5_2':
-        message => 'Not in compliance with CIS 1.5.2 (Not scored). Verify that No Execute (or Execute Disable, for some Intel processors) protection is enabled', #lint:ignore:140chars
+        message  => 'Not in compliance with CIS 1.5.2 (Scored). The Grub bootloader does not have a set password', #lint:ignore:80chars
         loglevel => 'warning',
       }
     }
   }
+
 }

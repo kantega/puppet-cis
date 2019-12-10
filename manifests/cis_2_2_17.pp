@@ -1,12 +1,17 @@
-# 2.2.17 Ensure rsh server is not enabled (Scored)
+# 2.2.17 Ensure NIS Server is not enabled (Scored)
 #
 # Description:
-# The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text.
+# The Network Information Service (NIS) (formally known as Yellow Pages) is a
+# client-server directory service protocol for distributing system configuration files.
+# The NIS server is a collection of programs that allow for the distribution of configuration files.
 #
 # Rationale:
-# These legacy services contain numerous security exposures and have been replaced with the more secure SSH package.
+# The NIS service is inherently an insecure system that has been vulnerable to DOS attacks,
+# buffer overflows and has poor authentication for querying NIS maps.
+# NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP).
+# It is recommended that the service be disabled and other, more secure services be used
 #
-# @summary 2.2.17 Ensure rsh server is not enabled (Scored)
+# @summary 2.2.17 Ensure NIS Server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_17
@@ -15,13 +20,7 @@ class cis::cis_2_2_17 (
 ) {
 
   if $enforced {
-    $rsh_services = [
-      'rsh.socket',
-      'rlogin.socket',
-      'rexec.socket',
-    ]
-
-    service { $rsh_services:
+    service { 'ypserv':
       ensure => stopped,
       enable => false,
     }

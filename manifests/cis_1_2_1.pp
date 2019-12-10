@@ -1,14 +1,14 @@
-# 1.2.1 Ensure package manager repositories are configured (Not Scored)
+# 1.2.1 Ensure GPG keys are configured (Not Scored)
 #
 #
 # Description:
-# Systems need to have package manager repositories configured to ensure they receive the latest patches and updates.
+# Most packages managers implement GPG key signing to verify package integrity during installation.
 #
-# @summary 1.2.1 Ensure package manager repositories are configured (Not Scored)
+# @summary 1.2.2 Ensure GPG keys are configured (Not Scored)
 #
 # @example
 #   include cis::1_2_1
 class cis::cis_1_2_1 {
-  # See CIS CentOS7 bencmark documentation
-  # Boils down to inspecting the contents of 'yum repolist'
+  # See CIS CentOS benchmark docs
+  # Boils down to inspecting and verifying GPG keys
 }

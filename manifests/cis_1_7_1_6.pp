@@ -1,10 +1,11 @@
-# 1.7.1.6 Ensure permissions on /etc/issue.net are configured (Not Scored)
+# 1.7.1.6 Ensure SETroubleshoot is not installed (Scored)
 #
 #
 # Description:
-# The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services.
+# The SETroubleshoot service notifies desktop users of SELinux denials through a user- friendly interface. The service provides
+# important information around configuration errors, unauthorized intrusions, and other potential errors.
 #
-# @summary 1.7.1.6 Ensure permissions on /etc/issue.net are configured (Not Scored)
+# @summary 1.7.1.6 Ensure SETroubleshoot is not installed (Scored)
 #
 # @example
 #   include cis::1_7_1_6
@@ -12,11 +13,8 @@ class cis::cis_1_7_1_6 (
   Boolean $enforced = true,
 ) {
   if $enforced {
-    file { '/etc/issue.net':
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
+    package { 'setroubleshoot':
+      ensure => purged,
     }
   }
 }

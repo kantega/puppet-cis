@@ -1,14 +1,16 @@
-# 2.2.7 Ensure NFS and RPC are not enabled (Scored)
+# 2.2.7 Ensure Samba is not enabled (Scored)
 #
 # Description:
-# The Network File System (NFS) is one of the first and most widely distributed file systems in the UNIX environment.
-# It provides the ability for systems to mount file systems of other servers through the network.
+# The Samba daemon allows system administrators to configure their Linux systems to share
+# file systems and directories with Windows desktops. Samba will advertise the file systems
+# and directories via the Small Message Block (SMB) protocol.
+# Windows desktop users will be able to mount these directories and file systems as letter drives on their systems.
 #
 # Rationale:
-# If the system does not export NFS shares or act as an NFS client,
-# it is recommended that these services be disabled to reduce remote attack surface.
+# If there is no need to mount directories and file systems to Windows systems,
+# then this service can be disabled to reduce the potential attack surface.
 #
-# @summary 2.2.7 Ensure NFS and RPC are not enabled (Scored)
+# @summary 2.2.7 Ensure Samba is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_7
@@ -17,14 +19,7 @@ class cis::cis_2_2_7 (
 ) {
 
   if $enforced {
-
-    $nfs_services = [
-      'nfs',
-      'nfs-server',
-      'rpcbind',
-    ]
-
-    service { $nfs_services:
+    service { 'smb':
       ensure => stopped,
       enable => false,
     }

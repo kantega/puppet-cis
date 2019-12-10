@@ -1,44 +1,37 @@
-# 2.2.1.2 Ensure ntp is configured (Scored)
+# 2.2.1.3 Ensure chrony is configured (Scored)
 #
 # Description:
-# ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to
+# chrony is a daemon which implements the Network Time Protocol (NTP) is designed to
 # synchronize system clocks across a variety of systems and use a source that is highly
-# accurate. More information on NTP can be found at http://www.ntp.org. ntp can be
-# configured to be a client and/or a server.
-# This recommendation only applies if ntp is in use on the system.
+# accurate. More information on chrony can be found at http://chrony.tuxfamily.org/. chrony
+# can be configured to be a client and/or a server.
 #
 # Rationale:
-# If ntp is in use on the system proper configuration is vital to ensuring time synchronization
-# is working properly.
+# If chrony is in use on the system proper configuration is vital to ensuring time
+# synchronization is working properly.
+# This recommendation only applies if chrony is in use on the system.
 #
-# @summary 2.2.1.2 Ensure ntp is configured (Scored)
+# @summary 2.2.1.3 Ensure chrony is configured (Scored)
 #
 # @example
-#   include cis::2_2_1_2
-class cis::cis_2_2_1_2 (
+#   include cis::2_2_1_3
+class cis::cis_2_2_1_3 (
   Array[String] $time_servers              = [],
   Boolean $enforced                        = true,
-  Enum['ntp', 'chrony', 'none'] $time_sync = 'ntp',
 ) {
 
-  if $enforced and $time_sync == 'ntp' {
+  if $enforced {
 
-    class { '::ntp':
-      servers  => $time_servers,
-      restrict => [
-        '-4 default kod nomodify notrap nopeer noquery',
-        '-6 default kod nomodify notrap nopeer noquery',
-      ],
+    class { '::chrony':
+      servers => $time_servers,
     }
 
-    file { '/etc/sysconfig/ntpd':
+    file { '/etc/sysconfig/chronyd':
       ensure  => file,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => 'OPTIONS="-u ntp:ntp"',
+      content => 'OPTIONS="-u chrony"',
     }
-
   }
-
 }

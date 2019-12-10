@@ -1,12 +1,11 @@
-# 1.4.1 Ensure permissions on bootloader config are configured (Scored)
+# 1.4.1 Ensure AIDE is installed (Scored)
 #
 #
 # Description:
-# The grub configuration file contains information on boot settings and passwords for unlocking boot options.
-# The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg. Additional settings can be found in the
-# /boot/grub2/user.cfg file.
+# AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be
+# used to compare against the current state of the filesystem to detect modifications to the system.
 #
-# @summary 1.4.1 Ensure permissions on bootloader config are configured (Scored)
+# @summary 1.4.1 Ensure AIDE is installed (Scored)
 #
 # @example
 #   include cis::1_4_1
@@ -15,20 +14,18 @@ class cis::cis_1_4_1 (
 ) {
 
   if $enforced {
-
-    file { '/boot/grub2/grub.cfg':
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0600',
+    package { 'aide':
+      ensure => installed,
+    }~>exec { 'create initial aide database':
+      command     => 'aide --init',
+      user        => 'root',
+      refreshonly => true,
+      path        => '/usr/sbin',
+    }~>exec { 'make intitial aide database main':
+      command     => 'mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz',
+      refreshonly => true,
+      path        => '/usr/bin',
     }
-
-    file { '/boot/grub2/user.cfg':
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0600',
-    }
-
   }
+
 }

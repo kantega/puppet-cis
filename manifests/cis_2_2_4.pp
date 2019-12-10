@@ -1,15 +1,16 @@
-# 2.2.4 Ensure CUPS is not enabled (Scored)
+# 2.2.4 Ensure Avahi Server is not enabled (Scored)
 #
 # Description:
-# The Common Unix Print System (CUPS) provides the ability to print to both local and network printers.
-# A system running CUPS can also accept print jobs from remote systems and print them to local printers.
-# It also provides a web based remote administration capability.
+# Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery.
+# Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration.
+# For example, a user can plug a computer into a network and Avahi automatically finds printers to print to,
+# files to look at and people to talk to, as well as network services running on the machine.
 #
 # Rationale:
-# If the system does not need to print jobs or accept print jobs from other systems,
-# it is recommended that CUPS be disabled to reduce the potential attack surface.
+# Automatic discovery of network services is not normally required for system functionality.
+# It is recommended to disable the service to reduce the potential attack surface.
 #
-# @summary 2.2.4 Ensure CUPS is not enabled (Scored)
+# @summary 2.2.4 Ensure Avahi Server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_4
@@ -18,7 +19,7 @@ class cis::cis_2_2_4 (
 ) {
 
   if $enforced {
-    service { 'cups':
+    service { 'avahi-daemon':
       ensure => stopped,
       enable => false,
     }

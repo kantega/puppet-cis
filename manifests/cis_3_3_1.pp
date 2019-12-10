@@ -1,33 +1,31 @@
-# 3.3.1 Ensure IPv6 router advertisements are not accepted (Not Scored)
+# 3.3.1 Ensure DCCP is disabled (Not Scored)
 #
 # Description:
-# This setting disables the system's ability to accept IPv6 router advertisements.
+# The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that
+# supports streaming media and telephony. DCCP provides a way to gain access to
+# congestion control, without having to do it at the application layer, but does not provide insequence
+# delivery.
 #
 # Rationale:
-# It is recommended that systems not accept router advertisements as they could be tricked
-# into routing traffic to compromised machines. Setting hard routes within the system
-# (usually a single default route to a trusted router) protects the system from bad routes.
+# If the protocol is not required, it is recommended that the drivers not be installed to reduce
+# the potential attack surface.
 #
-# @summary 3.3.1 Ensure IPv6 router advertisements are not accepted (Not Scored)
+# @summary 3.3.1 Ensure DCCP is disabled (Not Scored)
 #
 # @example
 #   include cis::3_3_1
 class cis::cis_3_3_1 (
   Boolean $enforced = true,
-  Boolean $ipv6_enabled = true,
 ) {
 
-  if $enforced and $ipv6_enabled {
-
-    sysctl { 'net.ipv6.conf.all.accept_ra':
-      value => 0,
-    }->sysctl { 'net.ipv6.conf.default.accept_ra':
-      value => 0,
-    }~>exec { 'cis_3_3_1 route flush':
-      command     => 'sysctl -w net.ipv6.route.flush=1',
-      refreshonly => true,
-      user        => 'root',
-      path        => '/sbin',
+  if $enforced {
+    file { 'disable DCCP':
+      ensure  => file,
+      path    => '/etc/modprobe.d/dccp.conf',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0400',
+      content => 'install dccp /bin/true',
     }
   }
 }

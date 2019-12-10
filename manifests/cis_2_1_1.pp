@@ -1,30 +1,31 @@
-# 2.1.1 Ensure chargen services are not enabled (Scored)
+# 2.1.1 Ensure xinetd is not installed (Scored)
 #
 # Description:
-# chargenis a network service that responds with 0 to 512 ASCII characters for each connection it receives.
-# This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
+#
+# The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced
+# the original inetd daemon. The xinetd daemon listens for well known services and
+# dispatches the appropriate daemon to properly respond to service requests.
 #
 # Rationale:
-# Disabling this service will reduce the remote attack surface of the system.
 #
-# @summary 2.1.1 Ensure chargen services are not enabled (Scored)
+# If there are no xinetd services required, it is recommended that the daemon be removed.
+#
+# @summary 2.1.1 Ensure xinetd is not installed (Scored)
 #
 # @example
 #   include cis::2_1_1
 class cis::cis_2_1_1 (
   Boolean $enforced = true,
 ) {
-
   if $enforced {
-    service { 'stop and disable chargen-dgram service':
+    service { 'stop and disable xinetd':
       ensure => stopped,
-      name   => 'chargen-dgram',
+      name   => 'xinetd',
       enable => false,
     }
-    service { 'stop and disable chargen-stream service':
-      ensure => stopped,
-      name   => 'chargen-stream',
-      enable => false,
+    ->package { 'ensure xinetd is removed':
+      ensure => absent,
+      name   => 'xinetd',
     }
   }
 }

@@ -1,34 +1,32 @@
-# 3.3.2 Ensure IPv6 redirects are not accepted (Not Scored)
+# 3.3.2 Ensure SCTP is disabled (Not Scored)
 #
 # Description:
-# This setting prevents the system from accepting ICMP redirects. ICMP redirects tell the
-# system about alternate routes for sending traffic.
+# The Stream Control Transmission Protocol (SCTP) is a transport layer protocol used to
+# support message oriented communication, with several streams of messages in one
+# connection. It serves a similar function as TCP and UDP, incorporating features of both. It is
+# message-oriented like UDP, and ensures reliable in-sequence transport of messages with
+# congestion control like TCP.
 #
 # Rationale:
-# It is recommended that systems not accept ICMP redirects as they could be tricked into
-# routing traffic to compromised machines. Setting hard routes within the system (usually a
-# single default route to a trusted router) protects the system from bad routes.
+# If the protocol is not being used, it is recommended that kernel module not be loaded,
+# disabling the service to reduce the potential attack surface.
 #
-# @summary 3.3.2 Ensure IPv6 redirects are not accepted (Not Scored)
+# @summary 3.3.2 Ensure SCTP is disabled (Not Scored)
 #
 # @example
-#   include cis::3_3_3
+#   include cis::3_3_2
 class cis::cis_3_3_2 (
   Boolean $enforced = true,
-  Boolean $ipv6_enabled = true,
 ) {
 
-  if $enforced and $ipv6_enabled {
-
-    sysctl { 'net.ipv6.conf.all.accept_redirects':
-      value => 0,
-    }->sysctl { 'net.ipv6.conf.default.accept_redirects':
-      value => 0,
-    }~>exec { 'cis_3_3_2 route flush':
-      command     => 'sysctl -w net.ipv6.route.flush=1',
-      refreshonly => true,
-      user        => 'root',
-      path        => '/sbin',
+  if $enforced {
+    file { 'disable SCTP':
+      ensure  => file,
+      path    => '/etc/modprobe.d/sctp.conf',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0400',
+      content => 'install sctp /bin/true',
     }
   }
 }

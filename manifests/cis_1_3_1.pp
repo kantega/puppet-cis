@@ -1,31 +1,30 @@
-# 1.3.1 Ensure AIDE is installed (Scored)
-#
+# 1.3.1 Ensure sudo is installed (Scored)
 #
 # Description:
-# AIDE takes a snapshot of filesystem state including modification times, permissions, and file hashes which can then be
-# used to compare against the current state of the filesystem to detect modifications to the system.
+# sudo allows a permitted user to execute a command as the superuser or another user, as
+# specified by the security policy. The invoking user's real (not effective) user ID is used to
+# determine the user name with which to query the security policy.
 #
-# @summary 1.3.1 Ensure AIDE is installed (Scored)
+# Rationale:
+# sudo supports a plugin architecture for security policies and input/output logging. Third
+# parties can develop and distribute their own policy and I/O logging plugins to work
+# seamlessly with the sudo front end. The default security policy is sudoers, which is
+# configured via the file /etc/sudoers.
+# The security policy determines what privileges, if any, a user has to run sudo. The policy
+# may require that users authenticate themselves with a password or another authentication
+# mechanism. If authentication is required, sudo will exit if the user's password is not
+# entered within a configurable time limit. This limit is policy-specific.
+#
+# @summary 1.3.1 Ensure sudo is installed (Scored)
 #
 # @example
 #   include cis::1_3_1
 class cis::cis_1_3_1 (
   Boolean $enforced = true,
 ) {
-
   if $enforced {
-    package { 'aide':
+    package { 'sudo':
       ensure => installed,
-    }~>exec { 'create initial aide database':
-      command     => 'aide --init',
-      user        => 'root',
-      refreshonly => true,
-      path        => '/usr/sbin',
-    }~>exec { 'make intitial aide database main':
-      command     => 'mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz',
-      refreshonly => true,
-      path        => '/usr/bin',
     }
   }
-
 }

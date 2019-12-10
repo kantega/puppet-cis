@@ -1,14 +1,13 @@
-# 2.2.8 Ensure DNS Server is not enabled (Scored)
+# 2.2.8 Ensure IMAP and POP3 server is not enabled (Scored)
 #
 # Description:
-# The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers,
-# services and other resources connected to a network.
+# dovecot is an open source IMAP and POP3 server for Linux based systems.
 #
 # Rationale:
-# Unless a system is specifically designated to act as a DNS server,
+# Unless POP3 and/or IMAP servers are to be provided by this system,
 # it is recommended that the service be disabled to reduce the potential attack surface.
 #
-# @summary 2.2.8 Ensure DNS Server is not enabled (Scored)
+# @summary 2.2.8 Ensure IMAP and POP3 server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_8
@@ -17,7 +16,14 @@ class cis::cis_2_2_8 (
 ) {
 
   if $enforced {
-    service { 'named':
+
+    $services = [
+      'dovecot',
+      'cyrus-imap',
+      'courier-imap',
+    ]
+
+    service { $services:
       ensure => stopped,
       enable => false,
     }

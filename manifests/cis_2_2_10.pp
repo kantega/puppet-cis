@@ -1,13 +1,15 @@
-# 2.2.10 Ensure HTTP server is not enabled (Scored)
+# 2.2.10 Ensure FTP Server is not enabled (Scored)
 #
 # Description:
-# HTTP or web servers provide the ability to host web site content.
+# The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files.
 #
 # Rationale:
-# Unless there is a need to run the system as a web server,
+# FTP does not protect the confidentiality of data or authentication credentials.
+# It is recommended sftp be used if file transfer is required.
+# Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads),
 # it is recommended that the service be disabled to reduce the potential attack surface.
 #
-# @summary 2.2.10 Ensure HTTP server is not enabled (Scored)
+# @summary 2.2.10 Ensure FTP Server is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_10
@@ -16,16 +18,7 @@ class cis::cis_2_2_10 (
 ) {
 
   if $enforced {
-
-    $http_services = [
-      'httpd',
-      'apache',
-      'apache2',
-      'lighttpd',
-      'nginx',
-    ]
-
-    service { $http_services:
+    service { 'vsftpd':
       ensure => stopped,
       enable => false,
     }

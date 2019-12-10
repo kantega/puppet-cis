@@ -1,17 +1,15 @@
-# 2.2.16 Ensure NIS Server is not enabled (Scored)
+# 2.2.16 Ensure CUPS is not enabled (Scored)
 #
 # Description:
-# The Network Information Service (NIS) (formally known as Yellow Pages) is a
-# client-server directory service protocol for distributing system configuration files.
-# The NIS server is a collection of programs that allow for the distribution of configuration files.
+# The Common Unix Print System (CUPS) provides the ability to print to both local and network printers.
+# A system running CUPS can also accept print jobs from remote systems and print them to local printers.
+# It also provides a web based remote administration capability.
 #
 # Rationale:
-# The NIS service is inherently an insecure system that has been vulnerable to DOS attacks,
-# buffer overflows and has poor authentication for querying NIS maps.
-# NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP).
-# It is recommended that the service be disabled and other, more secure services be used
+# If the system does not need to print jobs or accept print jobs from other systems,
+# it is recommended that CUPS be disabled to reduce the potential attack surface.
 #
-# @summary 2.2.16 Ensure NIS Server is not enabled (Scored)
+# @summary 2.2.16 Ensure CUPS is not enabled (Scored)
 #
 # @example
 #   include cis::2_2_16
@@ -20,7 +18,7 @@ class cis::cis_2_2_16 (
 ) {
 
   if $enforced {
-    service { 'ypserv':
+    service { 'cups':
       ensure => stopped,
       enable => false,
     }

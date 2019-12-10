@@ -1,15 +1,13 @@
-# 2.3.2 Ensure rsh client is not installed (Scored)
+# 2.3.2 Ensure telnet client is not installed (Scored)
 #
 # Description:
-# The rsh package contains the client commands for the rsh services.
+# The telnet package contains the telnet client, which allows users to start connections to other systems via the telnet protocol.
 #
 # Rationale:
-# These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package.
-# Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting
-# to use these commands and therefore exposing their credentials.
-# Note that removing the rsh package removes the clients for rsh , rcp and rlogin .
+# The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow an unauthorized user
+# to steal credentials. The ssh package provides an encrypted session and stronger security and is included in most Linux distributions.
 #
-# @summary 2.3.2 Ensure rsh client is not installed (Scored)
+# @summary 2.3.2 Ensure telnet client is not installed (Scored)
 #
 # @example
 #   include cis::2_3_2
@@ -18,7 +16,7 @@ class cis::cis_2_3_2 (
 ) {
 
   if $enforced {
-    package { 'rsh':
+    package { 'telnet':
       ensure => purged,
     }
   }

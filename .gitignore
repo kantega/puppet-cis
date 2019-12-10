@@ -23,3 +23,5 @@
 /update_report.txt
 .DS_Store
 *~
+*_old
+*.old

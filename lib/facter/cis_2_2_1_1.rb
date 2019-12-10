@@ -7,10 +7,6 @@ require 'English'
 
 Facter.add('cis_2_2_1_1') do
   setcode do
-    Facter::Core::Execution.exec('/usr/bin/rpm -q ntp')
-    unless $CHILD_STATUS
-      true
-    end
     Facter::Core::Execution.exec('/usr/bin/rpm -q chrony')
     unless $CHILD_STATUS
       true

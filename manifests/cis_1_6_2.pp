@@ -1,10 +1,11 @@
-# 1.6.2 Ensure SELinux is installed (Scored)
+# 1.6.2 Ensure address space layout randomization (ASLR) is enabled (Scored)
 #
 #
 # Description:
-# SELinux provides Mandatory Access Controls.
+# Address space layout randomization (ASLR) is an exploit mitigation technique which randomly arranges the address space
+# of key data areas of a process.
 #
-# @summary 1.6.2 Ensure SELinux is installed (Scored)
+# @summary 1.6.2 Ensure address space layout randomization (ASLR) is enabled (Scored)
 #
 # @example
 #   include cis::1_6_2
@@ -12,8 +13,8 @@ class cis::cis_1_6_2 (
   Boolean $enforced = true,
 ) {
   if $enforced {
-    package { 'libselinux':
-      ensure => present,
+    sysctl { 'kernel.randomize_va_space':
+      value => 2,
     }
   }
 }

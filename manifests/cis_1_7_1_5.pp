@@ -1,22 +1,17 @@
-# 1.7.1.5 Ensure permissions on /etc/issue are configured (Scored)
+# 1.7.1.5 Ensure no unconfined services exist (Scored)
 #
 #
 # Description:
-# The contents of the /etc/issue file are displayed to users prior to login for local terminals.
+# Unconfined processes run in unconfined domains
 #
-# @summary 1.7.1.5 Ensure permissions on /etc/issue are configured (Scored)
+# @summary 1.7.1.5 Ensure no unconfined services exist (Scored)
 #
 # @example
 #   include cis::1_7_1_5
-class cis::cis_1_7_1_5 (
-  Boolean $enforced = true,
-) {
-  if $enforced {
-    file { '/etc/issue':
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-    }
-  }
-}
+#class cis::cis_1_7_1_5 (
+#  Boolean $enforced = true,
+#) {
+#
+# TODO
+#
+#}

@@ -1,20 +1,28 @@
-# 1.5.3 Ensure address space layout randomization (ASLR) is enabled (Scored)
+# 1.5.3 Ensure authentication required for single user mode (Scored)
 #
 #
 # Description:
-# Address space layout randomization (ASLR) is an exploit mitigation technique which randomly arranges the address space
-# of key data areas of a process.
+# ingle user mode (rescue mode) is used for recovery when the system detects an issue during boot or by
+# manual selection from the bootloader.
 #
-# @summary 1.5.3 Ensure address space layout randomization (ASLR) is enabled (Scored)
+# @summary 1.5.3 Ensure authentication required for single user mode (Scored)
 #
 # @example
 #   include cis::1_5_3
 class cis::cis_1_5_3 (
   Boolean $enforced = true,
 ) {
+
   if $enforced {
-    sysctl { 'kernel.randomize_va_space':
-      value => 2,
+    file_line { 'rescue':
+      path  => '/usr/lib/systemd/system/rescue.service',
+      line  => 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue'
+      match => '^ExecStart=',
+    }
+    file_line { 'emergency':
+      path  => '/usr/lib/systemd/system/emergency.service',
+      line  => 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency',
+      match => '^ExecStart=',
     }
   }
 }
