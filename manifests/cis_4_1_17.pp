@@ -1,85 +1,30 @@
-# 4.1.17 Ensure kernel module loading and unloading is collected (Scored)
+# 4.1.17 Ensure the audit configuration is immutable (Scored)
 #
 # Description:
-# Monitor the loading and unloading of kernel modules. The programs insmod (install a
-# kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated
-# program to load and unload modules, as well as some other features) control loading and
-# unloading of modules. The init_module (load a module) and delete_module (delete a
-# module) system calls control loading and unloading of modules. Any execution of the
-# loading and unloading module programs and system calls will trigger an audit record with
-# an identifier of "modules".
+# Set system audit so that audit rules cannot be modified with auditctl . Setting the flag "-e 2"
+# forces audit to be put in immutable mode. Audit changes can only be made on system reboot.
 #
 # Rationale:
-# Monitoring the use of insmod , rmmod and modprobe could provide system administrators
-# with evidence that an unauthorized user loaded or unloaded a kernel module, possibly
-# compromising the security of the system. Monitoring of the init_module and
-# delete_module system calls would reflect an unauthorized user attempting to use a
-# different program to load and unload modules.
+# In immutable mode, unauthorized users cannot execute changes to the audit system to
+# potentially hide malicious activity and then put the audit rules back. Users would most
+# likely notice a system reboot and that could alert administrators of an attempt to make
+# unauthorized audit changes.
 #
-# @summary 4.1.17 Ensure kernel module loading and unloading is collected (Scored)
+# @summary 4.1.17 Ensure the audit configuration is immutable (Scored)
 #
 # @example
 #   include cis::4_1_17
 class cis::cis_4_1_17 (
   Boolean $enforced = true,
 ) {
-
   if $enforced {
-
-    # 64 bit architecture
-    if $facts['architecture'] =~ /64/ {
-
-      file_line { 'audit.rules kernel module 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/insmod -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/rmmod -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 3':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/modprobe -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 4':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b64 -S init_module -S delete_module -k modules',
-      }
-    }
-
-    # 32 bit architecture
-    else {
-
-      file_line { 'audit.rules kernel module 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/insmod -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/rmmod -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 3':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /sbin/modprobe -p x -k modules',
-      }
-
-      file_line { 'audit.rules kernel module 4':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S init_module -S delete_module -k modules',
-      }
-    }
+    file { 'audit configuration immutable setting':
+      ensure  => file,
+      mode    => '0400',
+      owner   => 'root',
+      group   => 'root',
+      content => '-e 2',
+      path    => '/etc/audit/rules.d/99-finalize.rules',
   }
 }
+

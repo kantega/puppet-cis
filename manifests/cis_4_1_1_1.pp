@@ -1,31 +1,26 @@
-# 4.1.1.1 Ensure audit log storage size is configured (Not Scored)
+# 4.1.1.1 Ensure auditd is installed (Scored)
+#
 #
 # Description:
-# Configure the maximum size of the audit log file. Once the log reaches the maximum size, it
-# will be rotated and a new log file will be started.
+# auditd is the userspace component to the Linux Auditing System. It's responsible for
+# writing audit records to the disk
 #
 # Rationale:
-# It is important that an appropriate size is determined for log files so that they do not impact
-# the system and audit data is not lost.
+# The capturing of system events provides system administrators with information to allow
+# them to determine if unauthorized access to their system is occurring.
 #
-# @summary 4.1.1.1 Ensure audit log storage size is configured (Not Scored)
-#
-# @param max_log_file The maximum size of the audit log file (MB) for your organization's policy.
+# @summary 4.1.1.1 Ensure auditd is installed (Scored)
 #
 # @example
 #   include cis::4_1_1_1
 class cis::cis_4_1_1_1 (
-  Boolean $enforced     = true,
-  Integer $max_log_file = 8,
+  Boolean $enforced = true,
 ) {
 
   if $enforced {
-
-    file_line { 'max_log_file':
-      ensure => present,
-      path   => '/etc/audit/auditd.conf',
-      line   => "max_log_file = ${max_log_file}",
-      match  => '^max_log_file =',
+    package { 'ensure audit packages is installed':
+      ensure => installed,
+      name   => ['audit', 'audit-libs']
     }
   }
 }

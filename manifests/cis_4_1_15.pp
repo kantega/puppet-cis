@@ -1,17 +1,22 @@
-# 4.1.15 Ensure changes to system administration scope (sudoers) is collected (Scored)
+# 4.1.15 Ensure kernel module loading and unloading is collected (Scored)
 #
 # Description:
-# Monitor scope changes for system administrations. If the system has been properly
-# configured to force system administrators to log in as themselves first and then use the
-# sudo command to execute privileged commands, it is possible to monitor changes in scope.
-# The file /etc/sudoers will be written to when the file or its attributes have changed. The
-# audit records will be tagged with the identifier "scope."
+# Monitor the loading and unloading of kernel modules. The programs insmod (install a
+# kernel module), rmmod (remove a kernel module), and modprobe (a more sophisticated
+# program to load and unload modules, as well as some other features) control loading and
+# unloading of modules. The init_module (load a module) and delete_module (delete a
+# module) system calls control loading and unloading of modules. Any execution of the
+# loading and unloading module programs and system calls will trigger an audit record with
+# an identifier of "modules".
 #
 # Rationale:
-# Changes in the /etc/sudoers file can indicate that an unauthorized change has been made
-# to scope of system administrator activity.
+# Monitoring the use of insmod , rmmod and modprobe could provide system administrators
+# with evidence that an unauthorized user loaded or unloaded a kernel module, possibly
+# compromising the security of the system. Monitoring of the init_module and
+# delete_module system calls would reflect an unauthorized user attempting to use a
+# different program to load and unload modules.
 #
-# @summary 4.1.15 Ensure changes to system administration scope (sudoers) is collected (Scored)
+# @summary 4.1.15 Ensure kernel module loading and unloading is collected (Scored)
 #
 # @example
 #   include cis::4_1_15
@@ -21,16 +26,60 @@ class cis::cis_4_1_15 (
 
   if $enforced {
 
-    file_line { 'audit.rules sudoers 1':
-      ensure => present,
-      path   => '/etc/audit/audit.rules',
-      line   => '-w /etc/sudoers -p wa -k scope',
+    # 64 bit architecture
+    if $facts['architecture'] =~ /64/ {
+
+      file_line { 'audit.rules kernel module 1':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/insmod -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 2':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/rmmod -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 3':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/modprobe -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 4':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-a always,exit -F arch=b64 -S init_module -S delete_module -k modules',
+      }
     }
 
-    file_line { 'audit.rules sudoers 2':
-      ensure => present,
-      path   => '/etc/audit/audit.rules',
-      line   => '-w /etc/sudoers.d/ -p wa -k scope',
+    # 32 bit architecture
+    else {
+
+      file_line { 'audit.rules kernel module 1':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/insmod -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 2':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/rmmod -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 3':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /sbin/modprobe -p x -k modules',
+      }
+
+      file_line { 'audit.rules kernel module 4':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-a always,exit -F arch=b32 -S init_module -S delete_module -k modules',
+      }
     }
   }
 }

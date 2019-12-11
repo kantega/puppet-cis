@@ -1,43 +1,23 @@
-# 4.1.1.2 Ensure system is disabled when audit logs are full (Scored)
+# 4.1.1.2 Ensure auditd service is enabled (Scored)
 #
 # Description:
-# The auditd daemon can be configured to halt the system when the audit logs are full.
+# Turn on the auditd daemon to record system events.
 #
 # Rationale:
-# In high security contexts, the risk of detecting unauthorized access or nonrepudiation
-# exceeds the benefit of the system's availability.
+# The capturing of system events provides system administrators with information to allow
+# them to determine if unauthorized access to their system is occurring.
 #
-# @summary 4.1.1.2 Ensure system is disabled when audit logs are full (Scored)
+# @summary 4.1.1.2 Ensure auditd service is enabled (Scored)
 #
 # @example
 #   include cis::4_1_1_2
 class cis::cis_4_1_1_2 (
   Boolean $enforced = true,
 ) {
-
   if $enforced {
-
-    file_line { 'space_left_action':
-      ensure => present,
-      path   => '/etc/audit/auditd.conf',
-      line   => 'space_left_action = email',
-      match  => '^space_left_action',
+    service { 'auditd':
+      ensure => running,
+      enable => true,
     }
-
-    file_line { 'action_mail_acct':
-      ensure => present,
-      path   => '/etc/audit/auditd.conf',
-      line   => 'action_mail_acct = root',
-      match  => '^action_mail_acct',
-    }
-
-    file_line { 'admin_space_left_action':
-      ensure => present,
-      path   => '/etc/audit/auditd.conf',
-      line   => 'admin_space_left_action = halt',
-      match  => '^admin_space_left_action',
-    }
-
   }
-
 }

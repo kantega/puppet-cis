@@ -1,18 +1,16 @@
-# 4.1.4 Ensure events that modify date and time information are collected (Scored)
+# 4.1.4 Ensure login and logout events are collected (Scored)
 #
 # Description:
-# Capture events where the system date and/or time has been modified. The parameters in
-# this section are set to determine if the adjtimex (tune kernel clock), settimeofday (Set
-# time, using timeval and timezone structures) stime (using seconds since 1/1/1970) or
-# clock_settime (allows for the setting of several internal clocks and timers) system calls
-# have been executed and always write an audit record to the /var/log/audit.log file upon
-# exit, tagging the records with the identifier "time-change"
+# Monitor login and logout events. The parameters below track changes to files associated
+# with login/logout events. The file /var/log/lastlog maintain records of the last time a
+# user successfully logged in. The /var/run/failock directory maintains records of login
+# failures via the pam_faillock module.
 #
 # Rationale:
-# Unexpected changes in system date and/or time could be a sign of malicious activity on the
-# system.
+# Monitoring login/logout events could provide a system administrator with information
+# associated with brute force attacks against user logins.
 #
-# @summary 4.1.4 Ensure events that modify date and time information are collected (Scored)
+# @summary 4.1.4 Ensure login and logout events are collected (Scored)
 #
 # @example
 #   include cis::4_1_4
@@ -21,68 +19,17 @@ class cis::cis_4_1_4 (
 ) {
 
   if $enforced {
-    file { 'ensure audit.rules file exists':
-      ensure => file,
+
+    file_line { 'audit.rules login/logout 1':
+      ensure => present,
       path   => '/etc/audit/audit.rules',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0640',
-    }
-    # 64 bit architecture
-    if $facts['architecture'] =~ /64/ {
-
-      file_line { 'audit.rules time 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change',
-      }
-
-      file_line { 'audit.rules time 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k timechange',
-      }
-
-      file_line { 'audit.rules time 3':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b64 -S clock_settime -k time-change',
-      }
-
-      file_line { 'audit.rules time 4':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S clock_settime -k time-change',
-      }
-
-      file_line { 'audit.rules time 5':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /etc/localtime -p wa -k time-change',
-      }
-
+      line   => '-w /var/log/faillog -p wa -k logins',
     }
 
-    # 32 bit architecture
-    else {
-
-      file_line { 'audit.rules time 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k timechange',
-      }
-
-      file_line { 'audit.rules time 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S clock_settime -k time-change',
-      }
-
-      file_line { 'audit.rules time 3':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-w /etc/localtime -p wa -k time-change',
-      }
+    file_line { 'audit.rules login/logout 2':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /var/log/lastlog -p wa -k logins',
     }
   }
 }

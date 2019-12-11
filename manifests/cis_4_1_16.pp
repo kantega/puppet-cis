@@ -20,6 +20,7 @@
 #   include cis::4_1_16
 class cis::cis_4_1_16 (
   Boolean $enforced = true,
+  String $sudo_log = '/var/log/sudo.log',
 ) {
 
   if $enforced {
@@ -27,7 +28,7 @@ class cis::cis_4_1_16 (
     file_line { 'audit.rules sudo.log 1':
       ensure => present,
       path   => '/etc/audit/audit.rules',
-      line   => '-w /var/log/sudo.log -p wa -k actions',
+      line   => "-w ${sudo_log} -p wa -k actions",
     }
   }
 }

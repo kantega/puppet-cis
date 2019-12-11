@@ -1,14 +1,14 @@
-# 4.1.1.3 Ensure audit logs are not automatically deleted (Scored)
+# 4.1.1.3 Ensure auditing for processes that start prior to auditd is enabled (Scored)
 #
 # Description:
-# The max_log_file_action setting determines how to handle the audit log file reaching the
-# max file size. A value of keep_logs will rotate the logs but never delete old logs.
+# Configure grub2 so that processes that are capable of being audited can be audited even if
+# they start up prior to auditd startup.
 #
 # Rationale:
-# In high security contexts, the benefits of maintaining a long audit history exceed the cost of
-# storing the audit history.
+# Audit events need to be captured on processes that start up prior to auditd, so that
+# potential malicious activity cannot go undetected.
 #
-# @summary 4.1.1.3 Ensure audit logs are not automatically deleted (Scored)
+# @summary 4.1.1.3 Ensure auditing for processes that start prior to auditd is enabled (Scored)
 #
 # @example
 #   include cis::4_1_1_3
@@ -17,12 +17,11 @@ class cis::cis_4_1_1_3 (
 ) {
 
   if $enforced {
-
-    file_line { 'max_log_file_action':
-      ensure => present,
-      path   => '/etc/audit/auditd.conf',
-      line   => 'max_log_file_action = keep_logs',
-      match  => '^max_log_file_action',
+    if $facts['cis_4_1_1_3'] {
+      notify { 'cis_4_1_1_3':
+        message  => 'Not in compliance with CIS 4.1.1.3 (Scored). Auditing for processes starting prior to auditd is not enabled',
+        loglevel => 'warning',
+      }
     }
   }
 }

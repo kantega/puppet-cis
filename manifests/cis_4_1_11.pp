@@ -1,19 +1,18 @@
-# 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+# 4.1.11 Ensure events that modify user/group information are collected (Scored)
 #
 # Description:
-# Monitor for unsuccessful attempts to access files. The parameters below are associated
-# with system calls that control creation ( creat ), opening ( open , openat ) and truncation (
-# truncate , ftruncate ) of files. An audit log record will only be written if the user is a nonprivileged
-# user (auid > = 1000), is not a Daemon event (auid=4294967295) and if the
-# system call returned EACCES (permission denied to the file) or EPERM (some other
-# permanent error associated with the specific system call). All audit records will be tagged
-# with the identifier "access."
+# Record events affecting the group , passwd (user IDs), shadow and gshadow (passwords) or
+# /etc/security/opasswd (old passwords, based on remember parameter in the PAM
+# configuration) files. The parameters in this section will watch the files to see if they have
+# been opened for write or have had attribute changes (e.g. permissions) and tag them with
+# the identifier "identity" in the audit log file.
 #
 # Rationale:
-# Failed attempts to open, create or truncate files could be an indication that an individual or
-# process is trying to gain unauthorized access to the system.
+# Unexpected changes to these files could be an indication that the system has been
+# compromised and that an unauthorized user is attempting to hide their activities or
+# compromise additional accounts.
 #
-# @summary 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected (Scored)
+# @summary 4.1.11 Ensure events that modify user/group information are collected (Scored)
 #
 # @example
 #   include cis::4_1_11
@@ -23,48 +22,34 @@ class cis::cis_4_1_11 (
 
   if $enforced {
 
-    # 32 bit architecture
-    if $facts['architecture'] =~ /64/ {
-
-      file_line { 'audit.rules file access 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
-
-      file_line { 'audit.rules file access 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
-
-      file_line { 'audit.rules file access 3':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
-
-      file_line { 'audit.rules file access 4':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
+    file_line { 'audit.rules user/group 1':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/group -p wa -k identity',
     }
 
-    # 32 bit architecture
-    else {
+    file_line { 'audit.rules user/group 2':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/passwd -p wa -k identity',
+    }
 
-      file_line { 'audit.rules file access 1':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
+    file_line { 'audit.rules user/group 3':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/gshadow -p wa -k identity',
+    }
 
-      file_line { 'audit.rules file access 2':
-        ensure => present,
-        path   => '/etc/audit/audit.rules',
-        line   => '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access', # lint:ignore:140chars
-      }
+    file_line { 'audit.rules user/group 4':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/shadow -p wa -k identity',
+    }
+
+    file_line { 'audit.rules user/group 5':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/security/opasswd -p wa -k identity',
     }
   }
 }

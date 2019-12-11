@@ -1,16 +1,28 @@
-# 4.1.8 Ensure login and logout events are collected (Scored)
+# 4.1.8 Ensure events that modify the system's network environment are collected (Scored)
 #
 # Description:
-# Monitor login and logout events. The parameters below track changes to files associated
-# with login/logout events. The file /var/log/lastlog maintain records of the last time a
-# user successfully logged in. The /var/run/failock directory maintains records of login
-# failures via the pam_faillock module.
+# Record changes to network environment files or system calls. The below parameters
+# monitor the sethostname (set the systems host name) or setdomainname (set the systems
+# domainname) system calls, and write an audit event on system call exit. The other
+# parameters monitor the /etc/issue and /etc/issue.net files (messages displayed prelogin),
+# /etc/hosts (file containing host names and associated IP addresses),
+# /etc/sysconfig/network file and /etc/sysconfig/network-scripts/ directory
+# (containing network interface scripts and configurations).
 #
 # Rationale:
-# Monitoring login/logout events could provide a system administrator with information
-# associated with brute force attacks against user logins.
+# Monitoring sethostname and setdomainname will identify potential unauthorized changes
+# to host and domainname of a system. The changing of these names could potentially break
+# security parameters that are set based on those names. The /etc/hosts file is monitored
+# for changes in the file that can indicate an unauthorized intruder is trying to change
+# machine associations with IP addresses and trick users and processes into connecting to
+# unintended machines. Monitoring /etc/issue and /etc/issue.net is important, as
+# intruders could put disinformation into those files and trick users into providing
+# information to the intruder. Monitoring /etc/sysconfig/network and
+# /etc/sysconfig/network-scripts/ is important as it can show if network interfaces or
+# scripts are being modified in a way that can lead to the machine becoming unavailable or
+# compromised. All audit records will be tagged with the identifier "system-locale."
 #
-# @summary 4.1.8 Ensure login and logout events are collected (Scored)
+# @summary 4.1.8 Ensure events that modify the system's network environment are collected (Scored)
 #
 # @example
 #   include cis::4_1_8
@@ -20,16 +32,80 @@ class cis::cis_4_1_8 (
 
   if $enforced {
 
-    file_line { 'audit.rules login/logout 1':
-      ensure => present,
-      path   => '/etc/audit/audit.rules',
-      line   => '-w /var/log/lastlog -p wa -k logins',
+    # 64 bit architecture
+    if $facts['architecture'] =~ /64/ {
+
+      file_line { 'audit.rules network 1':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale',
+      }
+
+      file_line { 'audit.rules network 2':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale',
+      }
+
+      file_line { 'audit.rules network 3':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/issue -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 4':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/issue.net -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 5':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/hosts -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 6':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/sysconfig/network -p wa -k system-locale',
+      }
+
     }
 
-    file_line { 'audit.rules login/logout 2':
-      ensure => present,
-      path   => '/etc/audit/audit.rules',
-      line   => '-w /var/run/faillock/ -p wa -k logins',
+    # 32 bit architecture
+    else {
+
+      file_line { 'audit.rules network 1':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale',
+      }
+
+      file_line { 'audit.rules network 2':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/issue -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 3':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/issue.net -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 4':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/hosts -p wa -k system-locale',
+      }
+
+      file_line { 'audit.rules network 5':
+        ensure => present,
+        path   => '/etc/audit/audit.rules',
+        line   => '-w /etc/sysconfig/network -p wa -k system-locale',
+      }
+
     }
   }
 }

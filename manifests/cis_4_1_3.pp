@@ -1,14 +1,17 @@
-# 4.1.3 Ensure auditing for processes that start prior to auditd is enabled (Scored)
+# 4.1.3 Ensure changes to system administration scope (sudoers) is collected (Scored)
 #
 # Description:
-# Configure grub so that processes that are capable of being audited can be audited even if
-# they start up prior to auditd startup.
+# Monitor scope changes for system administrations. If the system has been properly
+# configured to force system administrators to log in as themselves first and then use the
+# sudo command to execute privileged commands, it is possible to monitor changes in scope.
+# The file /etc/sudoers will be written to when the file or its attributes have changed. The
+# audit records will be tagged with the identifier "scope."
 #
 # Rationale:
-# Audit events need to be captured on processes that start up prior to auditd, so that
-# potential malicious activity cannot go undetected.
+# Changes in the /etc/sudoers file can indicate that an unauthorized change has been made
+# to scope of system administrator activity.
 #
-# @summary A short summary of the purpose of this class
+# @summary 4.1.3 Ensure changes to system administration scope (sudoers) is collected (Scored)
 #
 # @example
 #   include cis::4_1_3
@@ -18,15 +21,16 @@ class cis::cis_4_1_3 (
 
   if $enforced {
 
-    shellvar { 'GRUB_CMDLINE_LINUX cis_4_1_3':
-      ensure       => present,
-      variable     => 'GRUB_CMDLINE_LINUX',
-      target       => '/etc/default/grub',
-      value        => 'audit=1',
-      array_append => true,
-    }~>exec { 'reload grub2 configuration 4_1_3':
-      command     => '/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg',
-      refreshonly => true,
+    file_line { 'audit.rules sudoers 1':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/sudoers -p wa -k scope',
+    }
+
+    file_line { 'audit.rules sudoers 2':
+      ensure => present,
+      path   => '/etc/audit/audit.rules',
+      line   => '-w /etc/sudoers.d/ -p wa -k scope',
     }
   }
 }
