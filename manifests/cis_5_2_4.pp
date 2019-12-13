@@ -1,17 +1,17 @@
-# 5.2.4 Ensure SSH X11 forwarding is disabled (Scored)
+# 5.2.4 Ensure permissions on SSH public host key files are configured (Scored)
 #
 # Description:
-# The X11Forwarding parameter provides the ability to tunnel X11 traffic through
-# the connection to enable remote graphic connections.
+#
+# An SSH public key is one of two files used in SSH public key authentication. In this
+# authentication method, a public key is a key that can be used for verifying digital signatures
+# generated using a corresponding private key. Only a public key that corresponds to a
+# private key will be able to authenticate successfully.
 #
 # Rationale:
-# Disable X11 forwarding unless there is an operational requirement to use X11
-# applications directly. There is a small risk that the remote X11 servers of
-# users who are logged in via SSH with X11 forwarding could be compromised by
-# other users on the X11 server. Note that even if X11 forwarding is disabled,
-# users can always install their own forwarders.
+# If a public host key file is modified by an unauthorized user, the SSH service may be
+# compromised.
 #
-# @summary 5.2.4 Ensure SSH X11 forwarding is disabled (Scored)
+# @summary 5.2.4 Ensure permissions on SSH public host key files are configured (Scored)
 #
 # @example
 #   include cis::5_2_4
@@ -20,13 +20,17 @@ class cis::cis_5_2_4 (
 ) {
 
   if $enforced {
-
-    file_line { 'ssh x11 setting':
-      ensure => present,
-      path   => '/etc/ssh/sshd_config',
-      line   => 'X11Forwarding no',
-      match  => '^#?[\r\n\f\v ]?X11Forwarding',
-      notify => Service['sshd'],
+    exec { 'set mode permissions on SSH public keys':
+      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chmod 0644 {} \;',
+      onlyif      => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key.pub" -perm /055 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
+      user        => 'root',
+      path        => [ '/usr/bin' ],
+    }
+    exec { 'set ownership on SSH public keys':
+      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chown root:root {} \;',
+      onlyif      => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key.pub") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
+      user        => 'root',
+      path        => [ '/usr/bin' ],
     }
   }
 }

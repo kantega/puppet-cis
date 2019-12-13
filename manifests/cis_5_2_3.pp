@@ -1,19 +1,19 @@
-# 5.2.3 Ensure SSH LogLevel is set to INFO (Scored)
+# 5.2.3 Ensure permissions on SSH private host key files are configured (Scored)
 #
 # Description:
-# The INFO parameter specifies that login and logout activity will be logged.
+#
+# An SSH private key is one of two files used in SSH public key authentication. In this
+# authentication method, the possession of the private key is proof of identity. Only a private
+# key that corresponds to a public key will be able to authenticate successfully. The private
+# keys need to be stored and handled carefully, and no copies of the private key should be
+# distributed.
 #
 # Rationale:
-# SSH provides several logging levels with varying amounts of verbosity. DEBUG is
-# specifically not recommended other than strictly for debugging SSH
-# communications since it provides so much data that it is difficult to identify
-# important security information. INFO level is the basic level that only records
-# login activity of SSH users. In many situations, such as Incident Response, it
-# is important to determine when a particular user was active on a system. The
-# logout record can eliminate those users who disconnected, which helps narrow
-# the field.
 #
-# @summary 5.2.3 Ensure SSH LogLevel is set to INFO (Scored)
+# If an unauthorized user obtains the private SSH host key file, the host could be
+# impersonated
+#
+# @summary 5.2.3 Ensure permissions on SSH private host key files are configured (Scored)
 #
 # @example
 #   include cis::5_2_3
@@ -22,13 +22,17 @@ class cis::cis_5_2_3 (
 ) {
 
   if $enforced {
-
-    file_line { 'ssh log level':
-      ensure => present,
-      path   => '/etc/ssh/sshd_config',
-      line   => 'LogLevel INFO',
-      match  => '^LogLevel',
-      notify => Service['sshd'],
+    exec { 'set mode permissions on SSH private keys':
+      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chmod 0600 {} \;',
+      onlyif      => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key" -perm /077 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
+      user        => 'root',
+      path        => [ '/usr/bin' ],
+    }
+    exec { 'set ownership on SSH private keys':
+      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chown root:root {} \;',
+      onlyif      => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
+      user        => 'root',
+      path        => [ '/usr/bin' ],
     }
   }
 }

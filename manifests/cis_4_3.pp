@@ -20,8 +20,6 @@ class cis::cis_4_3 (
 ) {
 
   if $enforced {
-
     class { '::logrotate': }
-
   }
 }

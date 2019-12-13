@@ -23,10 +23,6 @@ class cis::cis_5_2_1 (
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-    }->
-    service { 'sshd':
-      ensure => running,
-      enable => true,
     }
   }
 }
