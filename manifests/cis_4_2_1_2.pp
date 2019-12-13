@@ -1,14 +1,13 @@
-# 4.2.1.2 Ensure logging is configured (Not Scored)
+# 4.2.1.2 Ensure rsyslog Service is enabled (Scored)
 #
 # Description:
-# The /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files specifies rules for logging and
-# which files are to be used to log certain classes of messages.
+# Once the rsyslog package is installed it needs to be activated.
 #
 # Rationale:
-# A great deal of important security-related information is sent via rsyslog (e.g., successful
-# and failed su attempts, failed login attempts, root login attempts, etc.).
+# If the rsyslog service is not activated the system may default to the syslogd service or lack
+# logging instead.
 #
-# @summary 4.2.1.2 Ensure logging is configured (Not Scored)
+# @summary 4.2.1.2 Ensure rsyslog Service is enabled (Scored)
 #
 # @example
 #   include cis::4_2_1_2
@@ -17,37 +16,11 @@ class cis::cis_4_2_1_2 (
   Enum['rsyslog', 'syslog-ng', 'none'] $logging = 'rsyslog',
 ) {
 
-  if $enforced and $logging == 'rsyslog' {
+  if $enforced and $logging != 'none' {
 
-    $configs = {
-      '*.emerg'                 => ':omusrmsg:*',
-      'mail.*'                  => '-/var/log/mail',
-      'mail.info'               => '-/var/log/mail.info',
-      'mail.warning'            => '-/var/log/mail.warn',
-      'mail.err'                => '/var/log/mail.err',
-      'news.crit'               => '-/var/log/news/news.crit',
-      'news.err'                => '-/var/log/news/news.err',
-      'news.notice'             => '-/var/log/news/news.notice',
-      '*.=warning;*.=err'       => '-/var/log/warn',
-      '*.crit'                  => '/var/log/warn',
-      '*.*;mail.none;news.none' => '-/var/log/messages',
-      'local0,local1.*'         => '-/var/log/localmessages',
-      'local2,local3.*'         => '-/var/log/localmessages',
-      'local4,local5.*'         => '-/var/log/localmessages',
-      'local6,local7.*'         => '-/var/log/localmessages',
-    }
-
-    $configs.each | $config, $dest | {
-      file { "/etc/rsyslog.d/${config}":
-        ensure  => file,
-        content => "${config} ${dest}",
-        notify  => Exec['reload rsyslog'],
-      }
-    }
-
-    exec { 'reload rsyslog':
-      command     => '/bin/pkill -HUP rsyslogd',
-      refreshonly => true,
+    service { $logging:
+      ensure => running,
+      enable => true,
     }
   }
 }
