@@ -1,35 +1,49 @@
-# 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+# 5.2.13 Ensure SSH Idle Timeout Interval is configured (Scored)
 #
 # Description:
-# The LoginGraceTime parameter specifies the time allowed for successful authentication to the SSH server. The longer the Grace period is
-# the more open unauthenticated connections can exist. Like other session controls in this session the Grace Period should be limited to
-# appropriate organizational limits to ensure the service is available for needed access.
+# The two options ClientAliveInterval and ClientAliveCountMax control the timeout of ssh sessions. When the ClientAliveInterval variable is
+# set, ssh sessions that have no activity for the specified length of time are terminated. When the ClientAliveCountMax variable is set,
+# sshd will send client alive messages at every ClientAliveInterval interval. When the number of consecutive client alive messages are sent
+# with no response from the client, the ssh session is terminated. For example, if the ClientAliveInterval is set to 15 seconds and the
+# ClientAliveCountMax is set to 3, the client ssh session will be terminated after 45 seconds of idle time.
 #
 # Rationale:
-# Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will
-# also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number
-# based on site policy.
+# Having no timeout value associated with a connection could allow an unauthorized user access to another user's ssh session (e.g. user
+# walks away from their computer and doesn't lock the screen). Setting a timeout value at least reduces the risk of this happening..
 #
-# @summary 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+# While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for
+# ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will
+# be sent.
+#
+# @summary 5.2.13 Ensure SSH Idle Timeout Interval is configured (Scored)
 #
 # @example
 #   include cis::5_2_13
 class cis::cis_5_2_13 (
   Boolean $enforced = true,
-  Integer $login_grace_time = 60,
+  Integer $client_alive_interval = 300,
+  Enum['0','1','2','3'] $client_alive_count_max = '0',
 ) {
 
   if $enforced {
 
-    if $login_grace_time > 60 or $login_grace_time < 1 {
-      fail('The Login Grace Time parameter has been manually set past the 1 - 60 threshold')
+    if $client_alive_interval > 300 or $client_alive_interval < 1 {
+      fail('The Client Alive Interval has been manually set past the 1 - 300 threshold')
     }
 
-    file_line{ 'ssh login grace time':
+    file_line { 'ssh alive interval':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => "LoginGraceTime ${login_grace_time}",
-      match  => '^#?LoginGraceTime',
+      line   => "ClientAliveInterval ${client_alive_interval}",
+      match  => '^#?ClientAliveInterval',
+      notify => Service['sshd'],
+    }
+
+    file_line { 'ssh alive count max':
+      ensure => 'present',
+      path   => '/etc/ssh/sshd_config',
+      line   => "ClientAliveCountMax ${client_alive_count_max}",
+      match  => '^#?ClientAliveCountMax',
       notify => Service['sshd'],
     }
   }
