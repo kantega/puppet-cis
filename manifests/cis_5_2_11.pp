@@ -1,53 +1,26 @@
-# A description of what this class does
+# 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)
 #
 # Description:
-#
+# The PermitEmptyPasswords parameter specifies if the SSH server allows login to accounts with empty password strings.
 #
 # Rationale:
+# Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system
 #
-#
-# @summary A short summary of the purpose of this class
+# @summary 5.2.11 Ensure SSH PermitEmptyPasswords is disabled (Scored)
 #
 # @example
 #   include cis::5_2_11
 class cis::cis_5_2_11 (
   Boolean $enforced = true,
-  Array $approved_mac_algorithms = [
-    'hmac-sha2-512-etm@openssh.com',
-    'hmac-sha2-256-etm@openssh.com',
-    'umac-128-etm@openssh.com',
-    'hmac-sha2-512',
-    'hmac-sha2-256',
-    'umac-128@openssh.com'
-  ]
 ) {
 
   if $enforced {
 
-    $acceptable_values = [
-      'hmac-sha2-512-etm@openssh.com',
-      'hmac-sha2-256-etm@openssh.com',
-      'umac-128-etm@openssh.com',
-      'hmac-sha2-512',
-      'hmac-sha2-256',
-      'umac-128@openssh.com'
-    ]
-
-    $approved_mac_algorithms.each |$algorithm| {
-
-      if !($algorithm in $acceptable_values) {
-
-        fail("MAC Algorithm ${algorithm} does not match CIS standards. Please use CIS standard 5.2.11 for reference")
-      }
-    }
-
-    $mac_algorithm_array = join($approved_mac_algorithms,',')
-
-    file_line { 'ssh mac algorithms':
+    file_line { 'ssh permit empty password':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => "MACs ${mac_algorithm_array}",
-      match  => '^#?MACs',
+      line   => 'PermitEmptyPasswords no',
+      match  => '^#?PermitEmptyPasswords',
       notify => Service['sshd'],
     }
   }

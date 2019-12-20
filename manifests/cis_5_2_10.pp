@@ -1,27 +1,28 @@
-# 5.2.10 Ensure SSH PermitUserEnvironment is disabled (Scored)
+# 5.2.10 Ensure SSH root login is disabled (Scored)
 #
 # Description:
-# The PermitUserEnvironment option allows users to present environment options to the ssh daemon.
+# The PermitRootLogin parameter specifies if the root user can log in using ssh(1). The default is no.
 #
 # Rationale:
-# Permitting users the ability to set environment variables through the SSH daemon could potentially allow users to bypass security
-# controls (e.g. setting an execution path that has ssh executing trojan'd programs)
+# Disallowing root logins over SSH requires system admins to authenticate using their own individual account, then escalating to root via
+# sudo or su . This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident
 #
-# @summary 5.2.10 Ensure SSH PermitUserEnvironment is disabled (Scored)
+# @summary 5.2.10 Ensure SSH root login is disabled (Scored)
 #
 # @example
 #   include cis::5_2_10
 class cis::cis_5_2_10 (
   Boolean $enforced = true,
+  Enum['no','yes','without-password'] $setting = 'no',
 ) {
 
   if $enforced {
 
-    file_line { 'ssh permit user environment':
+    file_line { 'ssh permit root login':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => 'PermitUserEnvironment no',
-      match  => '^#?PermitUserEnvironment',
+      line   => "PermitRootLogin ${setting}",
+      match  => '^#?PermitRootLogin',
       notify => Service['sshd'],
     }
   }

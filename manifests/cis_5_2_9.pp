@@ -1,12 +1,14 @@
-# 5.2.9 Ensure SSH PermitEmptyPasswords is disabled (Scored)
+# 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)
 #
 # Description:
-# The PermitEmptyPasswords parameter specifies if the SSH server allows login to accounts with empty password strings.
+# The HostbasedAuthentication parameter specifies if authentication is allowed through trusted hosts via the user of .rhosts , or
+# /etc/hosts.equiv , along with successful public key client host authentication. This option only applies to SSH Protocol Version 2.
 #
 # Rationale:
-# Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system
+# Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf , disabling the ability to use .rhosts files in SSH
+# provides an additional layer of protection .
 #
-# @summary 5.2.9 Ensure SSH PermitEmptyPasswords is disabled (Scored)
+# @summary 5.2.9 Ensure SSH HostbasedAuthentication is disabled (Scored)
 #
 # @example
 #   include cis::5_2_9
@@ -16,11 +18,11 @@ class cis::cis_5_2_9 (
 
   if $enforced {
 
-    file_line { 'ssh permit empty password':
+    file_line { 'ssh host based authentication':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => 'PermitEmptyPasswords no',
-      match  => '^#?PermitEmptyPasswords',
+      line   => 'HostbasedAuthentication no',
+      match  => '^HostbasedAuthentication',
       notify => Service['sshd'],
     }
   }
