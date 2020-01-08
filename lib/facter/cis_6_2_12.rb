@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # cis_6_2_12.rb
-# 6.2.12 Ensure no users have .netrc files (Scored)
+# 6.2.12 Ensure users' .netrc Files are not group or world accessible
 
 Facter.add('cis_6_2_12') do
   setcode do

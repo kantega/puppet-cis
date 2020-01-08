@@ -16,7 +16,7 @@ class cis::cis_6_1_7 (
       ensure => present,
       owner  => 'root',
       group  => 'root',
-      mode   => '0000',
+      mode   => '0600',
     }
   }
 }

@@ -1,4 +1,4 @@
-# 5.3.1 Ensure password creation requirements are configured (Scored)
+# 5.4.1 Ensure password creation requirements are configured (Scored)
 #
 # Description:
 # The pam_pwquality.so module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word,
@@ -20,11 +20,11 @@
 # Rationale:
 # Strong passwords protect systems from being hacked through brute force methods.
 #
-# @summary 5.3.1 Ensure password creation requirements are configured (Scored)
+# @summary 5.4.1 Ensure password creation requirements are configured (Scored)
 #
 # @example
-#   include cis::5_3_1
-class cis::cis_5_3_1 (
+#   include cis::5_4_1
+class cis::cis_5_4_1 (
   Boolean $enforced = true,
   Integer $minlen = 14,
   Integer $dcredit = -1,
@@ -36,7 +36,7 @@ class cis::cis_5_3_1 (
   if $enforced {
     if $minlen == 0 and $dcredit == 0 and $ucredit == 0 and $ocredit == 0 and $lcredit == 0 {
       notify { 'blackpass':
-        message  => 'Not in compliance with CIS 5.3.1 (Scored). At least one of the password requirements in /etc/security/pwquality.conf must be specified',#lint:ignore:140chars
+        message  => 'Not in compliance with CIS 5.4.1 (Scored). At least one of the password requirements in /etc/security/pwquality.conf must be specified',#lint:ignore:140chars
         loglevel => 'warning',
       }
     }

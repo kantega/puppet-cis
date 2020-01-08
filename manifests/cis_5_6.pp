@@ -1,22 +1,23 @@
-# 5.6 Ensure access to the su command is restricted (Scored)
-#
+# 5.6 Ensure root login is restricted to system console (Not Scored)
 #
 # Description:
-# The su command allows a user to run a command or shell as another user. The program has been superseded by sudo , which allows for more
-# granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so
-# statement in /etc/pam.d/su , the su command will only allow users in the wheel group to execute su .
+# The file /etc/securetty contains a list of valid terminals that may be logged in directly as root.
 #
-# @summary 5.6 Ensure access to the su command is restricted (Scored)
+# @summary 5.6 Ensure root login is restricted to system console (Not Scored)
 #
 # @example
-#   include cis::5_6
+#   include cis::cis_5_6
 class cis::cis_5_6 (
   Boolean $enforced = true,
 ) {
-  if $enforced {
-    file_line { 'su':
-      path => '/etc/pam.d/su',
-      line => 'auth required pam_wheel.so use_uid',
-    }
-  }
+
 }
+#
+#   if $enforced {
+#
+#     notify { 'console':
+#     message => '[5.6] (Not Scored) Please ensure any consoles specified in /etc/securetty are valid and in a physically secure location',
+#     }
+#   }
+# }
+#---This cannot be automated or enforced in any way

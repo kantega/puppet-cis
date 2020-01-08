@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # cis_6_2_8.rb
-# 6.2.8 Ensure users' home directories permissions are 750 or more restrictive (Scored)
+# 6.2.8 Ensure users own their home directories (Scored)
 
-Facter.add('home_directory_permission') do
+Facter.add('cis_6_2_8') do
   setcode do
-    Facter::Core::Execution.exec('/tmp/cis_scripts/home_dir_perm.sh')
+    Facter::Core::Execution.exec('/usr/local/bin/cis_6_2_8.sh')
   end
 end

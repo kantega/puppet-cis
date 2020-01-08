@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # cis_6_2_18.rb
-# 6.2.18 Ensure no duplicate user names exist (Scored)
+# 6.2.18 Ensure no duplicate group names exist (Scored)
 
 Facter.add('cis_6_2_18') do
   setcode do

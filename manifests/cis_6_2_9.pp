@@ -1,10 +1,10 @@
-# 6.2.9 Ensure users own their home directories (Scored)
+# 6.2.9 Ensure users' dot files are not group or world writable (Scored)
 #
 #
 # Description:
-# The user home directory is space defined for the particular user to set local environment variables and to store personal files.
+# While the system administrator can establish secure permissions for users' "dot" files, the users can easily override these.
 #
-# @summary 6.2.9 Ensure users own their home directories (Scored)
+# @summary 6.2.9 Ensure users' dot files are not group or world writable (Scored)
 #
 # @example
 #   include cis::6_2_9
@@ -13,16 +13,17 @@ class cis::cis_6_2_9 (
 ) {
 
   if $enforced {
-    file { 'users own their home directory check script':
+    file { 'users dot files world readable check script':
+      ensure  => file,
       path    => '/usr/local/bin/cis_6_2_9.sh',
       owner   => 'root',
       group   => 'root',
       mode    => '0711',
-      content => file('cis/cis_6_2_9.sh')
+      content => file('cis/cis_6_2_9.sh'),
     }
-    if !($facts[ 'cis_6_2_9' ].empty) {
+    if $facts['cis_6_2_9'] != '' {
       notify { 'cis_6_2_9':
-        message  => 'Not in compliance with CIS 6.2.9 (Scored). You have a home directory that is not owned by a user. Check the home_directory_owner fact for details',#lint:ignore:140chars
+        message  => 'Not in compliance with CIS 6.2.9 (Scored). There are DOT files that are either group or world writable. Check the dot_file_writable fact for details',#lint:ignore:140chars
         loglevel => 'warning',
       }
     }

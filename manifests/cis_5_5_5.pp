@@ -1,4 +1,4 @@
-# 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+# 5.5.5 Ensure default user umask is 027 or more restrictive (Scored)
 #
 #
 # Description:
@@ -7,11 +7,11 @@
 # readable by others by default may choose a different default umask by inserting the umask command into the standard shell
 # configuration files ( .profile , .bashrc , etc.) in their home directories.
 #
-# @summary 5.4.4 Ensure default user umask is 027 or more restrictive (Scored)
+# @summary 5.5.5 Ensure default user umask is 027 or more restrictive (Scored)
 #
 # @example
-#   include cis::redhat7::cis_5_4_4
-class cis::cis_5_4_4 (
+#   include cis::redhat7::cis_5_5_5
+class cis::cis_5_5_5 (
   Boolean $enforced = true,
 ) {
 

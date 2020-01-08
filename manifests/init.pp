@@ -14,6 +14,7 @@ class cis (
   Boolean $cis_3_enforced                       = true,
   Boolean $cis_4_enforced                       = true,
   Boolean $cis_5_enforced                       = true,
+  Boolean $cis_5_3_enforced                     = true,
   Boolean $cis_6_enforced                       = true,
 ) {
 
@@ -198,10 +199,9 @@ class cis (
     include ::cis::cis_5_2_13
     include ::cis::cis_5_2_14
     include ::cis::cis_5_2_15
-    include ::cis::cis_5_3_1
-    include ::cis::cis_5_3_2
-    include ::cis::cis_5_3_3
-    include ::cis::cis_5_3_4
+    if $cis_5_3_enforced {
+      # TODO
+    }
     include ::cis::cis_5_4_1_1
     include ::cis::cis_5_4_1_2
     include ::cis::cis_5_4_1_3
@@ -209,7 +209,7 @@ class cis (
     include ::cis::cis_5_4_1_5
     include ::cis::cis_5_4_2
     include ::cis::cis_5_4_3
-    include ::cis::cis_5_4_4
+    # TODO include ::cis::cis_5_4_4
     include ::cis::cis_5_4_5
     include ::cis::cis_5_5
     include ::cis::cis_5_6

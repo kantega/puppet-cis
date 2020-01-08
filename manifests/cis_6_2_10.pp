@@ -1,10 +1,10 @@
-# 6.2.10 Ensure users' dot files are not group or world writable (Scored)
+# 6.2.10 Ensure no users have .forward files (Scored)
 #
 #
 # Description:
-# While the system administrator can establish secure permissions for users' "dot" files, the users can easily override these.
+# The .forward file specifies an email address to forward the user's mail to.
 #
-# @summary 6.2.10 Ensure users' dot files are not group or world writable (Scored)
+# @summary 6.2.10 Ensure no users have .forward files (Scored)
 #
 # @example
 #   include cis::6_2_10
@@ -13,7 +13,8 @@ class cis::cis_6_2_10 (
 ) {
 
   if $enforced {
-    file { 'users dot files world readable check script':
+
+    file { 'users have no .forward files check script':
       ensure  => file,
       path    => '/usr/local/bin/cis_6_2_10.sh',
       owner   => 'root',
@@ -21,9 +22,10 @@ class cis::cis_6_2_10 (
       mode    => '0711',
       content => file('cis/cis_6_2_10.sh'),
     }
-    if $facts['cis_6_2_10'] != '' {
+
+    if !($facts['cis_6_2_10'].empty) {
       notify { 'cis_6_2_10':
-        message  => 'Not in compliance with CIS 6.2.10 (Scored). There are DOT files that are either group or world writable. Check the dot_file_writable fact for details',#lint:ignore:140chars
+        message  => 'Not in compliance with CIS 6.2.10 (Scored). There are .forward files on the system. Check the forward_files fact for details',#lint:ignore:140chars
         loglevel => 'warning',
       }
     }

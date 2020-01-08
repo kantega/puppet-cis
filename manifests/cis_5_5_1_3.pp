@@ -1,4 +1,4 @@
-# 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
+# 5.5.1.3 Ensure password expiration warning days is 7 or more (Scored)
 #
 # Description:
 # The PASS_WARN_AGE parameter in /etc/login.defs allows an administrator to notify users that their password will expire in a defined
@@ -8,11 +8,11 @@
 # Providing an advance warning that a password will be expiring gives users time to think of a secure password. Users caught unaware may
 # choose a simple password or write it down where it may be discovered.
 #
-# @summary 5.4.1.3 Ensure password expiration warning days is 7 or more (Scored)
+# @summary 5.5.1.3 Ensure password expiration warning days is 7 or more (Scored)
 #
 # @example
-#   include cis::5_4_1_3
-class cis::cis_5_4_1_3 (
+#   include cis::5_5_1_3
+class cis::cis_5_5_1_3 (
   Boolean $enforced = true,
   Integer $pass_warn_days = 7,
 ) {

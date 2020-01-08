@@ -1,10 +1,10 @@
-# 6.2.14 Ensure no users have .rhosts files (Scored)
+# 6.2.14 Ensure all groups in /etc/passwd exist in /etc/group (Scored)
 #
 #
 # Description:
-# While no .rhosts files are shipped by default, users can easily create them.
+# Over time, system administration errors and changes can lead to groups being defined in /etc/passwd but not in /etc/group
 #
-# @summary 6.2.14 Ensure no users have .rhosts files (Scored)
+# @summary 6.2.14 Ensure all groups in /etc/passwd exist in /etc/group (Scored)
 #
 # @example
 #   include cis::6_2_14
@@ -13,6 +13,7 @@ class cis::cis_6_2_14 (
 ) {
 
   if $enforced {
+
     file { '/usr/local/bin/cis_6_2_14.sh':
       owner   => 'root',
       group   => 'root',
@@ -21,7 +22,7 @@ class cis::cis_6_2_14 (
     }
     if !($facts['cis_6_2_14'].empty) {
       notify { 'cis_6_2_14':
-        message  => 'Not in compliance with CIS 6.2.14 (Scored). A user(s) has .rhost files in their home directory.',
+        message  => 'Not in compliance with CIS 6.2.14 (Scored). There is a group(s) in /etc/passwd that does not exist in /etc/group.', # lint:ignore:140chars
         loglevel => 'warning',
       }
     }

@@ -1,10 +1,10 @@
-# 6.2.13 Ensure users' .netrc Files are not group or world accessible
+# 6.2.13 Ensure no users have .rhosts files (Scored)
 #
 #
 # Description:
-# While the system administrator can establish secure permissions for users' .netrc files, the users can easily override these.
+# While no .rhosts files are shipped by default, users can easily create them.
 #
-# @summary 6.2.13 Ensure users' .netrc Files are not group or world accessible
+# @summary 6.2.13 Ensure no users have .rhosts files (Scored)
 #
 # @example
 #   include cis::6_2_13
@@ -19,9 +19,9 @@ class cis::cis_6_2_13 (
       mode    => '0711',
       content => file('cis/cis_6_2_13.sh'),
     }
-    if !($facts[ 'cis_6_2_13' ].empty) {
+    if !($facts['cis_6_2_13'].empty) {
       notify { 'cis_6_2_13':
-        message  => 'Not in compliance with CIS 6.2.13 (Scored). There are .netrc files that are either group or world accessible.',
+        message  => 'Not in compliance with CIS 6.2.13 (Scored). A user(s) has .rhost files in their home directory.',
         loglevel => 'warning',
       }
     }

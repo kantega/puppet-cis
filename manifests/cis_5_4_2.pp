@@ -1,24 +1,88 @@
-# 5.4.2 Ensure system accounts are non-login (Scored)
-#
+# 5.4.2 Ensure lockout for failed password attempts is configured (Scored)
 #
 # Description:
-# There are a number of accounts provided with Red Hat 7 that are used to manage applications and are not intended to provide
-# an interactive shell.
+# Lock out users after n unsuccessful consecutive login attempts. The first sets of changes are made to the PAM configuration files. The
+# second set of changes are applied to the program specific PAM configuration file. The second set of changes must be applied to each
+# program that will lock out users. Check the documentation for each secondary program for instructions on how to configure them to work
+# with PAM.
 #
-# @summary 5.4.2 Ensure system accounts are non-login (Scored)
+# Set the lockout number to the policy in effect at your site.
 #
-# @exampl e
+# Rationale:
+# Locking out user IDs after n unsuccessful consecutive login attempts mitigates brute force password attacks against your systems.
+#
+# @summary 5.4.2 Ensure lockout for failed password attempts is configured (Scored)
+#
+# @example
 #   include cis::5_4_2
 class cis::cis_5_4_2 (
   Boolean $enforced = true,
+  Integer $attempts = 5,
+  Integer $lockout_time = 900,
 ) {
+
+  $services = [
+    'system-auth',
+    'password-auth'
+  ]
   if $enforced {
-    if $facts['cis_5_4_2'] != [] {
-      $facts['cis_5_4_2'].each | String $user | {
-        exec { "nologin ${user}":
-          command => "usermod -s /sbin/nologin ${user}",
-          path    => '/sbin/',
-        }
+
+    $services.each | $service | {
+      pam { "pam_unix ${service}":
+        ensure           => present,
+        service          => $service,
+        type             => 'auth',
+        module           => 'pam_unix.so',
+        control          => '[success=1 default=bad]',
+        control_is_param => true,
+        arguments        => [],
+      }
+
+      pam { "pam_faillock preauth ${service}":
+        ensure           => present,
+        service          => $service,
+        type             => 'auth',
+        module           => 'pam_faillock.so',
+        control          => 'required',
+        control_is_param => true,
+        arguments        => [
+          'preauth',
+          'audit',
+          'silent',
+          "deny=${attempts}",
+          "unlock_time=${lockout_time}"
+        ],
+        position         => 'before *[type="auth" and module="pam_unix.so"]',
+      }
+      pam { "pam_faillock authfail ${service}":
+        ensure           => present,
+        service          => $service,
+        type             => 'auth',
+        module           => 'pam_faillock.so',
+        control          => '[default=die]',
+        control_is_param => true,
+        arguments        => [
+          'authfail',
+          'audit',
+          "deny=${attempts}",
+          "unlock_time=${lockout_time}"
+        ],
+      position           => 'after *[type="auth" and module="pam_unix.so"]',
+      }
+      pam { "pam_faillock authsucc ${service}":
+        ensure           => present,
+        service          => $service,
+        type             => 'auth',
+        module           => 'pam_faillock.so',
+        control          => 'sufficient',
+        control_is_param => true,
+        position         => 'after *[type="auth" and module="pam_faillock.so" and control="[default=die]"]',
+        arguments        => [
+          'authsucc',
+          'audit',
+          "deny=${attempts}",
+          "unlock_time=${lockout_time}"
+        ],
       }
     }
   }

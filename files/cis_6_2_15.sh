@@ -1,8 +1,9 @@
 #!/bin/bash
-for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
-  grep -q -P "^.*?:[^:]*:$i:" /etc/group
-  if [ $? -ne 0 ]; then
-    echo "Group $i is referenced by /etc/passwd but does not exist in
-/etc/group"
+cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    users=`awk -F: '($3 == n) { print $1 }' n=$2 /etc/passwd | xargs`
+    echo "Duplicate UID ($2): ${users}"
   fi
 done

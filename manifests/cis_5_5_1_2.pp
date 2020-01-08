@@ -1,4 +1,4 @@
-# 5.4.1.2 Ensure minimum days between password changes is 7 or more (Scored)
+# 5.5.1.2 Ensure minimum days between password changes is 7 or more (Scored)
 #
 # Description:
 # The PASS_MIN_DAYS parameter in /etc/login.defs allows an administrator to prevent users from changing their password until a minimum
@@ -9,11 +9,11 @@
 # By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an
 # attempt to circumvent password reuse controls.
 #
-# @summary 5.4.1.2 Ensure minimum days between password changes is 7 or more (Scored)
+# @summary 5.5.1.2 Ensure minimum days between password changes is 7 or more (Scored)
 #
 # @example
-#   include cis::5_4_1_2
-class cis::cis_5_4_1_2 (
+#   include cis::5_5_1_2
+class cis::cis_5_5_1_2 (
   Boolean $enforced = true,
   Integer $pass_min_days = 7,
 ) {
@@ -21,7 +21,7 @@ class cis::cis_5_4_1_2 (
   if $enforced {
 
     if $pass_min_days < 7 {
-      fail('PASS_min_DAYS should be set to a value of 7 or more')
+      fail('PASS_MIN_DAYS should be set to a value of 7 or more')
     }
     else {
       file_line { 'password change policy':

@@ -12,13 +12,13 @@ class cis::cis_6_1_10 (
   Boolean $enforced = true,
 ) {
 #   if $enforced {
-#     if $facts['world_writable_redhat'] {
-#       notify { 'wwrh':
+#     if $facts['cis_6_1_10'] {
+#       notify { 'cis_6_1_10':
 #         message  => '[6.1.10] You have one or more world writable files. Check the world_writable fact for details.',
 #         loglevel => 'warning',
 #       }
 #     }
 #   }
 # }
-# Not relevant for CentOS(?)
+# TODO: Implement fact
 }

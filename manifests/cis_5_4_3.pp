@@ -1,21 +1,43 @@
-# 5.4.3 Ensure default group for the root account is GID 0 (Scored)
-#
+# 5.4.3 Ensure password reuse is limited (Scored)
 #
 # Description:
-# The usermod command can be used to specify which group the root user belongs to. This affects permissions
-#  of files that are created by the root user.
+# The /etc/security/opasswd file stores the users' old passwords and can be checked to ensure that users are not recycling recent passwords.
 #
-# @summary 5.4.3 Ensure default group for the root account is GID 0 (Scored)
+# Rationale:
+# Forcing users not to reuse their past 5 passwords make it less likely that an attacker will be able to guess the password.
+#
+# Note that these change only apply to accounts configured on the local system.
+#
+# @summary 5.4.3 Ensure password reuse is limited (Scored)
 #
 # @example
 #   include cis::5_4_3
 class cis::cis_5_4_3 (
   Boolean $enforced = true,
+  Integer $past_passwords = 5,
 ) {
+
+  $services = [
+    'system-auth',
+    'password-auth'
+  ]
+
   if $enforced {
-    user { 'root':
-      ensure => present,
-      gid    => '0',
+
+    if $past_passwords < 5 {
+      fail('CIS recommends setting old password limit to previous 5.')
     }
+    else {
+      $services.each | $service | {
+        file_line { "password recycle ${service}":
+          ensure => 'present',
+          path   => "/etc/pam.d/${service}",
+          line   => "password sufficient pam_unix.so remember=${past_passwords}",
+          match  => '^#?password sufficient pam_unix\.so|^#?password required pam_pwhistory\.so',
+        }
+      }
+    }
+
   }
+
 }
