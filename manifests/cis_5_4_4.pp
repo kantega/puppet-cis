@@ -13,16 +13,19 @@
 #   include cis::redhat7::cis_5_4_4
 class cis::cis_5_4_4 (
   Boolean $enforced = true,
+  String  $umask    = '027',
 ) {
 
   if $enforced {
     file_line { 'bashrc':
       path => '/etc/bashrc',
-      line => 'umask 027',
+      line => "umask ${umask}",
+      match => '^umask ',
     }
     file_line { 'profile':
-      path => '/etc/profile',
-      line => 'umask 027',
+      path  => '/etc/profile',
+      line  => "umask ${umask}",
+      match => '^umask ',
     }
   }
 }
