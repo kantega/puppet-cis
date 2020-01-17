@@ -19,9 +19,9 @@ class cis::cis_3_6 (
 ) {
 
   if $enforced {
-    if $facts['cis_3_6']
+    if $facts['cis_3_6'] {
       notify { 'cis_3_6':
-        message  => 'Not in compliance with CIS 3.6 (Not Scored). IPv6 is enabled.'
+        message  => 'Not in compliance with CIS 3.6 (Not Scored). IPv6 is enabled.',
         loglevel => 'warning',
       }
     }

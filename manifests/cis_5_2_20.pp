@@ -19,8 +19,8 @@ class cis::cis_5_2_20 (
 
   if $enforced {
     exec { 'ssh systemwide crypto policy':
-      command => '/usr/bin/sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd'
-      onlyif  => '/usr/bin/grep "^/s*CRYPTO_POLICY=" /etc/sysconfig/sshd'
+      command => '/usr/bin/sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd',
+      onlyif  => '/usr/bin/grep "^/s*CRYPTO_POLICY=" /etc/sysconfig/sshd',
       user    => 'root',
       notify  => Service['sshd'],
     }

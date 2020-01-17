@@ -20,13 +20,11 @@ class cis::cis_4_2_2_1 (
 
   if $enforced {
 
-      file_line { 'journald forward to syslog':
-        ensure => present,
-        path   => '/etc/systemd/journald.conf',
-        line   => 'ForwardToSyslog=yes',
-        match  => '^ForwardToSyslog=',
-      }
+    file_line { 'journald forward to syslog':
+      ensure => present,
+      path   => '/etc/systemd/journald.conf',
+      line   => 'ForwardToSyslog=yes',
+      match  => '^ForwardToSyslog=',
     }
-
   }
 }

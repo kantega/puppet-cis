@@ -16,7 +16,7 @@ class cis::cis_1_5_3 (
   if $enforced {
     file_line { 'rescue':
       path  => '/usr/lib/systemd/system/rescue.service',
-      line  => 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue'
+      line  => 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue',
       match => '^ExecStart=',
     }
     file_line { 'emergency':

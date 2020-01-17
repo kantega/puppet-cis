@@ -22,14 +22,14 @@
 #   include cis::5_2_5
 class cis::cis_5_2_5 (
   Boolean $enforced = true,
-  Enum['INFO', 'VERBOSE'] $loglevel = 'INFO',
+  Enum['INFO', 'VERBOSE'] $ssh_loglevel = 'INFO',
 ) {
 
   if $enforced {
     file_line{ 'sshd loglevel setting':
       ensure => present,
       path   => '/etc/ssh/sshd_config',
-      line   => "LogLevel ${loglevel}",
+      line   => "LogLevel ${ssh_loglevel}",
       match  => '^LogLevel',
       notify => Service['sshd'],
     }

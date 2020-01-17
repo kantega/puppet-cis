@@ -25,6 +25,7 @@ class cis::cis_4_1_17 (
       group   => 'root',
       content => '-e 2',
       path    => '/etc/audit/rules.d/99-finalize.rules',
+    }
   }
 }
 

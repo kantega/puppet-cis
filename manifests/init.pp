@@ -1,9 +1,9 @@
-# The CentOS Linux 7 CIS Benchmark is updated for version: 2.2.0
+# The CentOS Linux 8 CIS Benchmark is updated for version: 1.0.0
 #
 # The benchmark can be found here:
 # https://downloads.cisecurity.org/
 #
-# @summary This class declares CIS controls for the CentOS Linux 7 Benchmark v2.2.0
+# @summary This class declares CIS controls for the CentOS Linux 8 Benchmark v1.0.0
 #
 # @example
 #   include cis
@@ -139,17 +139,13 @@ class cis (
     include ::cis::cis_3_3_2
     include ::cis::cis_3_3_3
     include ::cis::cis_3_3_4
-    if $cis_3_4_enforced {
+    # if $cis_3_4_enforced {
       # TODO Implement firewall benchmarks
       # Use external module meanwhile
-    }
+    # }
     include ::cis::cis_3_5
     include ::cis::cis_3_6
-    #    Class['::cis::cis_3_6_1']
-    #    -> Class['::cis::cis_3_6_3']
-    #    -> Class['::cis::cis_3_6_4']
-    #    -> Class['::cis::cis_3_6_5']
-    #    -> Class['::cis::cis_3_6_2']
+  }
   if $cis_4_enforced {
     include ::cis::cis_4_1_1_1
     include ::cis::cis_4_1_1_2
@@ -191,6 +187,7 @@ class cis (
     if $cis_4_3_enforced {
       include ::cis::cis_4_3
     }
+  }
   if $cis_5_enforced {
     include ::cis::cis_5_1_1
     include ::cis::cis_5_1_2
@@ -220,6 +217,9 @@ class cis (
     include ::cis::cis_5_2_18
     include ::cis::cis_5_2_19
     include ::cis::cis_5_2_20
+    # if $cis_5_3_enforced {
+      # TODO
+    # }
     include ::cis::cis_5_4_1
     include ::cis::cis_5_4_2
     include ::cis::cis_5_4_3
@@ -238,10 +238,6 @@ class cis (
       include ::cis::cis_5_6
     }
     include ::cis::cis_5_7
-    if $cis_5_3_enforced {
-      # TODO
-    }
-    # TODO include ::cis::cis_5_4_4
   }
   if $cis_6_enforced {
     include ::cis::cis_6_1_1
@@ -280,3 +276,4 @@ class cis (
     include ::cis::cis_6_2_20
   }
 }
+
