@@ -1,4 +1,4 @@
-# 2.2.1.3 Ensure chrony is configured (Scored)
+# 2.2.1.2 Ensure chrony is configured (Scored)
 #
 # Description:
 # chrony is a daemon which implements the Network Time Protocol (NTP) is designed to
@@ -11,11 +11,11 @@
 # synchronization is working properly.
 # This recommendation only applies if chrony is in use on the system.
 #
-# @summary 2.2.1.3 Ensure chrony is configured (Scored)
+# @summary 2.2.1.2 Ensure chrony is configured (Scored)
 #
 # @example
-#   include cis::2_2_1_3
-class cis::cis_2_2_1_3 (
+#   include cis::2_2_1_2
+class cis::cis_2_2_1_2 (
   Array[String] $time_servers              = [],
   Boolean $enforced                        = true,
 ) {
