@@ -20,7 +20,7 @@ class cis::cis_4_2_2_3 (
 ) {
 
   if $enforced {
-    file_line { 'journald compression of large log files':
+    file_line { 'journald write logfiles to persistent disk':
       ensure => present,
       path   => '/etc/systemd/journald.conf',
       line   => 'Storage=persistent',
