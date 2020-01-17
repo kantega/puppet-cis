@@ -20,7 +20,10 @@ class cis::cis_4_1_1_1 (
   if $enforced {
     package { 'ensure audit packages is installed':
       ensure => installed,
-      name   => ['audit', 'audit-libs']
+      name   => 'audit',
+    }->package { 'ensure audit-libs packages is installed':
+      ensure => installed,
+      name   => 'audit-libs',
     }
   }
 }
