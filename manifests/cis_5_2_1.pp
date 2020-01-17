@@ -17,14 +17,12 @@ class cis::cis_5_2_1 (
 ) {
 
   if $enforced {
-
     file { '/etc/ssh/sshd_config':
       ensure => file,
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-    }->
-    service { 'sshd':
+    }->service { 'sshd':
       ensure => running,
       enable => true,
     }

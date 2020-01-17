@@ -11,8 +11,8 @@
 # @summary 1.1.1.2 Ensure mounting of vFAT filesystems is limited (Scored)
 #
 # @example
-#   include cis::1.1.1.2
-class cis::cis_1.1.1.2 (
+#   include cis::1_1_1_2
+class cis::cis_1_1_1_2 (
   Boolean $enforced = true,
 ) {
 

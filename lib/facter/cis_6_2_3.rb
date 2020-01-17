@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-# cis_6_2_3.rb
-# 6.2.3 Ensure no legacy "+" entries exist in /etc/shadow (Scored)
+# cis_6_2_4.rb
 
-Facter.add('cis_6_2_3') do
+Facter.add('cis_6_2_4') do
   setcode "grep '^\\+:' /etc/shadow"
 end

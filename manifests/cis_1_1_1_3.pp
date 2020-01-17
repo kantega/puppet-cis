@@ -11,8 +11,8 @@
 # @summary 1.1.1.3 Ensure mounting of squashfs filesystems is disabled (Scored)
 #
 # @example
-#   include cis::1.1.1.3
-class cis::cis_1.1.1.3 (
+#   include cis::1_1_1_3
+class cis::cis_1_1_1_3 (
   Boolean $enforced = true,
 ) {
 

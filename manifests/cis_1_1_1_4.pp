@@ -12,8 +12,8 @@
 # @summary 1.1.1.4 Ensure mounting of udf filesystems is disabled (Scored)
 #
 # @example
-#   include cis::1.1.1.4
-class cis::cis_1.1.1.4 (
+#   include cis::1_1_1_4
+class cis::cis_1_1_1_4 (
   Boolean $enforced = true,
 ) {
 

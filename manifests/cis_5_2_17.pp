@@ -30,7 +30,7 @@ class cis::cis_5_2_17 (
     file_line{ 'ssh allowtcpforwarding disable':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => "AllowTcpForwarding no",
+      line   => 'AllowTcpForwarding no',
       match  => '^#?AllowTcpForwarding',
       notify => Service['sshd'],
     }

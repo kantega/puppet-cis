@@ -20,10 +20,10 @@ class cis::cis_4_2_3 (
 
   if $enforced {
     exec { 'set permissions on all logfiles':
-      command     => 'find /var/log -type f -exec chmod g-wx,o-rwx "{}" + -o -type d -exec chmod g-w,o-rwx "{}" +',
-      onlyif      => 'if [ $(find /var/log -type f -perm /037 -ls -o -type d -perm /026 -ls | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
-      user        => 'root',
-      path        => [ '/usr/bin' ],
+      command => 'find /var/log -type f -exec chmod g-wx,o-rwx "{}" + -o -type d -exec chmod g-w,o-rwx "{}" +',
+      onlyif  => 'if [ $(find /var/log -type f -perm /037 -ls -o -type d -perm /026 -ls | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
+      user    => 'root',
+      path    => [ '/usr/bin' ],
     }
   }
 }

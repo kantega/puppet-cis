@@ -27,7 +27,7 @@ class cis::cis_5_2_16 (
     file_line{ 'ssh pam enable':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
-      line   => "UsePAM yes",
+      line   => 'UsePAM yes',
       match  => '^#?UsePAM',
       notify => Service['sshd'],
     }

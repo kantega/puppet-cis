@@ -23,16 +23,16 @@ class cis::cis_5_2_3 (
 
   if $enforced {
     exec { 'set mode permissions on SSH private keys':
-      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chmod 0600 {} \;',
-      onlyif      => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key" -perm /077 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
-      user        => 'root',
-      path        => [ '/usr/bin' ],
+      command => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chmod 0600 {} \;',
+      onlyif  => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key" -perm /077 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
+      user    => 'root',
+      path    => [ '/usr/bin' ],
     }
     exec { 'set ownership on SSH private keys':
-      command     => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chown root:root {} \;',
-      onlyif      => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',
-      user        => 'root',
-      path        => [ '/usr/bin' ],
+      command => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key" -exec chown root:root {} \;',
+      onlyif  => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
+      user    => 'root',
+      path    => [ '/usr/bin' ],
     }
   }
 }
