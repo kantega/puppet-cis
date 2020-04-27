@@ -22,7 +22,6 @@
 /convert_report.txt
 /update_report.txt
 .DS_Store
-*~
-*_old
-*.old
-*_dis
+.project
+.envrc
+/inventory.yaml
