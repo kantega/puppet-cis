@@ -18,9 +18,11 @@ class cis::cis_5_5_4 (
   Boolean $enforced = true,
 ) {
   if $enforced {
-    user { 'root':
-      ensure => present,
-      gid    => '0',
+    if $facts['cis_5_5_4'] != '0' {
+      notify { 'cis_5_5_4':
+        message  => 'Not in compliance with CIS 5.5.4 (Scored). Default group for root is not 0',
+        loglevel => 'warning',
+      }
     }
   }
 }
