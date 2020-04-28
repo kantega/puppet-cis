@@ -21,16 +21,13 @@
 #   include cis::1_10
 class cis::cis_1_10 (
   Boolean $enforced = true,
+  Enum['LEGACY', 'DEFAULT', "FUTURE", "FIPS"] $crypto_policy = 'FUTURE',
 ) {
 
   if $enforced {
     exec { 'set system-wide crypto policy':
-      command => '/usr/bin/update-crypto-policies --set FUTURE',
-      unless  => '/usr/bin/update-crypto-policies --show | /usr/bin/grep FUTURE',
-    }
-    ~>exec { 'update system-wide crypto policy':
-      command     => '/usr/bin/update-crypto-policies --set FUTURE',
-      refreshonly => true,
+      command => "/usr/bin/update-crypto-policies --set ${crypto_policy}",
+      unless  => "/usr/bin/update-crypto-policies --show | /usr/bin/grep ${crypto_policy}",
     }
   }
 }
