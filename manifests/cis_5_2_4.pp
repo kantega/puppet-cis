@@ -21,16 +21,18 @@ class cis::cis_5_2_4 (
 
   if $enforced {
     exec { 'set mode permissions on SSH public keys':
-      command => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chmod 0644 {} \;',
-      onlyif  => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key.pub" -perm /055 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
-      user    => 'root',
-      path    => [ '/usr/bin' ],
+      command  => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chmod 0644 {} \;',
+      onlyif   => 'if [ $(find /etc/ssh -type f -iname "ssh_host_*_key.pub" -perm /055 | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
+      user     => 'root',
+      path     => [ '/usr/bin' ],
+      provider => 'shell',
     }
     exec { 'set ownership on SSH public keys':
-      command => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chown root:root {} \;',
-      onlyif  => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key.pub") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
-      user    => 'root',
-      path    => [ '/usr/bin' ],
+      command  => 'find /etc/ssh -xdev -type f -name "ssh_host_*_key.pub" -exec chown root:root {} \;',
+      onlyif   => 'if [ $(find /etc/ssh \! -user root -o \! -group root -iname "ssh_host_*_key.pub") | wc -l) -gt 0 ]; then exit 1; else exit 0; fi',#lint:ignore:140chars
+      user     => 'root',
+      path     => [ '/usr/bin' ],
+      provider => 'shell',
     }
   }
 }
