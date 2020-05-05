@@ -18,9 +18,11 @@ class cis::cis_1_8_1_3 (
 
   if $enforced {
     file { 'contents in /etc/issue.net':
+      ensure  => file,
       path    => '/etc/issue.net',
       owner   => 'root',
       group   => 'root',
+      mode   => '0644',
       content => $content,
     }
     if $facts['cis_1_8_1_3'] {

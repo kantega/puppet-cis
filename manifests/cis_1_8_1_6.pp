@@ -6,17 +6,4 @@
 #
 # @summary 1.8.1.6 Ensure permissions on /etc/issue.net are configured (Not Scored)
 #
-# @example
-#   include cis::1_8_1_6
-class cis::cis_1_8_1_6 (
-  Boolean $enforced = true,
-) {
-  if $enforced {
-    file { '/etc/issue.net':
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-    }
-  }
-}
+# Implemented in CIS 1.8.1.3
