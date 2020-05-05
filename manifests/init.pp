@@ -69,8 +69,6 @@ class cis (
     include ::cis::cis_1_8_1_2
     include ::cis::cis_1_8_1_3
     include ::cis::cis_1_8_1_4
-    include ::cis::cis_1_8_1_5
-    include ::cis::cis_1_8_1_6
     include ::cis::cis_1_8_2
     include ::cis::cis_1_9
     include ::cis::cis_1_10
