@@ -11,15 +11,22 @@
 #
 # @example
 #   include cis::1_8_1_2
-  class cis::cis_1_8_1_2 (
+class cis::cis_1_8_1_2 (
   Boolean $enforced = true,
+  String $content = 'Authorized access only! All activity is monitored.',
 ) {
 
   if $enforced {
-      if $facts['cis_1_8_1_2'] {
-        notify {'cis_1_8_1_2':
-          message  => 'Not in compliance with CIS 1.8.1.2 (Scored). There is OS and/or patch level information in /etc/issue',
-          loglevel => 'warning',
+    file { 'contents in /etc/issue':
+      path    => '/etc/issue',
+      owner   => 'root',
+      group   => 'root',
+      content => $content,
+    }
+    if $facts['cis_1_8_1_2'] {
+      notify {'cis_1_8_1_2':
+        message  => 'Not in compliance with CIS 1.8.1.2 (Scored). There is OS and/or patch level information in /etc/issue',
+        loglevel => 'warning',
       }
     }
   }

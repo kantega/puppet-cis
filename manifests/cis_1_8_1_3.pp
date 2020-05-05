@@ -13,8 +13,16 @@
 #   include cis::1_8_1_3
 class cis::cis_1_8_1_3 (
   Boolean $enforced = true,
+  String $content = 'Authorized access only! All activity is monitored.',
 ) {
+
   if $enforced {
+    file { 'contents in /etc/issue.net':
+      path    => '/etc/issue.net',
+      owner   => 'root',
+      group   => 'root',
+      content => $content,
+    }
     if $facts['cis_1_8_1_3'] {
       notify { 'cis_1_8_1_3':
         message  => 'Not in compliance with CIS 1.8.1.3 (Scored). There is OS and/or patch level information in /etc/issue.net',

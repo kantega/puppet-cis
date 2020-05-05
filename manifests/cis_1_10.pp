@@ -21,7 +21,7 @@
 #   include cis::1_10
 class cis::cis_1_10 (
   Boolean $enforced = true,
-  Enum['LEGACY', 'DEFAULT', "FUTURE", "FIPS"] $crypto_policy = 'FUTURE',
+  Enum['LEGACY', 'DEFAULT', 'FUTURE', 'FIPS'] $crypto_policy = 'FUTURE',
 ) {
 
   if $enforced {
