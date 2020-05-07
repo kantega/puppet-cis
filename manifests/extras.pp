@@ -46,12 +46,12 @@ class cis::extras (
       file { '/etc/setroubleshoot':
         ensure  => absent,
         path    => '/etc/setroubleshoot',
-        force   => true.
+        force   => true,
       }
       file { '/var/lib/setroubleshoot':
         ensure  => absent,
         path    => '/var/lib/setroubleshoot',
-        force   => true.
+        force   => true,
       }
       user { 'remove setroubleshoot user':
         name   => 'setroubleshoot',
