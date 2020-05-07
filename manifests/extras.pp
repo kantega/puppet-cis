@@ -19,9 +19,14 @@ class cis::extras (
         name   => 'cockpit',
         enable => 'false',
       }
-      ->package { $packages:
+      package { $packages:
         ensure => absent,
-      }->file { $files:
+      }
+      file { $files:
+        ensure => absent,
+      }
+      user { 'remove cockpit-ws user':
+        name   => 'cockpit-ws',
         ensure => absent,
       }
     }
