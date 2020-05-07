@@ -26,7 +26,7 @@ class cis::extras (
       }
     }
     if $remove_root_bin_path {
-      file_line { "remove phat":
+      file_line { "remove root bin path":
         ensure => absent,
         path => "/root/.bash_profile",
         match => '^PATH=\$PATH:\$HOME/bin',
