@@ -5,6 +5,6 @@
 
 Facter.add('cis_6_2_6') do
   setcode do
-    Facter::Core::Execution.exec("cat /etc/passwd | awk -F: '($3 == 0) { print $1 }")
+    Facter::Core::Execution.exec("cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'")
   end
 end
