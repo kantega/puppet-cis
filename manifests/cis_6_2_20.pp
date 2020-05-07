@@ -22,7 +22,7 @@ class cis::cis_6_2_20 (
       content => file('cis/cis_6_2_20.sh')
     }
 
-    if $facts['cis_6_2_20'] {
+    if $facts['cis_6_2_20'] != '' {
       notify { 'cis_6_2_20':
         message  => 'Not in compliance with CIS 6.2.20 (Scored). You have a user(s) that does not have a home directory. Check the home_directory fact for details',#lint:ignore:140chars
         loglevel => 'warning',
