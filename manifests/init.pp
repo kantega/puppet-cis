@@ -277,5 +277,6 @@ class cis (
     include ::cis::cis_6_2_19
     include ::cis::cis_6_2_20
   }
+  include ::cis::extras
 }
 
