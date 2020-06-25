@@ -22,7 +22,7 @@ class cis::cis_1_8_1_2 (
       path    => '/etc/issue',
       owner   => 'root',
       group   => 'root',
-      mode   => '0644',
+      mode    => '0644',
       content => $content,
     }
     if $facts['cis_1_8_1_2'] {

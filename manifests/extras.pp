@@ -8,10 +8,10 @@ class cis::extras (
   if $enforced {
     if $disable_cockpit {
       $cockpit_packages = ['cockpit-bridge',
-                   'cockpit-packagekit',
-                   'cockpit-system',
-                   'cockpit-ws',
-                   'cockpit']
+        'cockpit-packagekit',
+        'cockpit-system',
+        'cockpit-ws',
+        'cockpit']
       $cockpit_files = [ '/etc/motd.d/cockpit',
                  '/run/cockpit/motd' ]
 
@@ -27,15 +27,15 @@ class cis::extras (
         ensure => absent,
       }
       user { 'remove cockpit-ws user':
-        name   => 'cockpit-ws',
         ensure => absent,
+        name   => 'cockpit-ws',
       }
     }
     if $remove_root_bin_path {
-      file_line { "remove root bin path":
-        ensure => absent,
-        path => "/root/.bash_profile",
-        match => '^PATH=\$PATH:\$HOME/bin',
+      file_line { 'remove root bin path':
+        ensure            => absent,
+        path              => '/root/.bash_profile',
+        match             => '^PATH=\$PATH:\$HOME/bin',
         match_for_absence => true
       }
     }
@@ -44,18 +44,18 @@ class cis::extras (
         ensure => absent,
       }
       file { '/etc/setroubleshoot':
-        ensure  => absent,
-        path    => '/etc/setroubleshoot',
-        force   => true,
+        ensure => absent,
+        path   => '/etc/setroubleshoot',
+        force  => true,
       }
       file { '/var/lib/setroubleshoot':
-        ensure  => absent,
-        path    => '/var/lib/setroubleshoot',
-        force   => true,
+        ensure => absent,
+        path   => '/var/lib/setroubleshoot',
+        force  => true,
       }
       user { 'remove setroubleshoot user':
-        name   => 'setroubleshoot',
         ensure => absent,
+        name   => 'setroubleshoot',
       }
     }
   }

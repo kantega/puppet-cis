@@ -10,7 +10,10 @@
 #   include cis::6_2_20
 class cis::cis_6_2_20 (
   Boolean $enforced = true,
+  Array[String] $exclude_users = [],
 ) {
+  $exclude_users_real = concat($exclude_users, [ 'shutdown', 'halt', 'sync' ])
+  $exclude_users_string = join($exclude_users_real, '|')
 
   if $enforced {
     file { 'all users have home directory check script':
@@ -19,12 +22,12 @@ class cis::cis_6_2_20 (
       owner   => 'root',
       group   => 'root',
       mode    => '0711',
-      content => file('cis/cis_6_2_20.sh')
+      content => template('cis/cis_6_2.20.sh.erb')
     }
 
     if $facts['cis_6_2_20'] != '' {
       notify { 'cis_6_2_20':
-        message  => 'Not in compliance with CIS 6.2.20 (Scored). You have a user(s) that does not have a home directory. Check the home_directory fact for details',#lint:ignore:140chars
+        message  => 'Not in compliance with CIS 6.2.20 (Scored). You have a user(s) that does not have a home directory.',
         loglevel => 'warning',
       }
     }
