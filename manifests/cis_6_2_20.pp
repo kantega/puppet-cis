@@ -22,7 +22,7 @@ class cis::cis_6_2_20 (
       owner   => 'root',
       group   => 'root',
       mode    => '0711',
-      content => template('cis/cis_6_2.20.sh.erb')
+      content => template('cis/cis_6_2_20.sh.erb')
     }
 
     if $facts['cis_6_2_20'] != '' {
