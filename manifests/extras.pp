@@ -30,6 +30,10 @@ class cis::extras (
         ensure => absent,
         name   => 'cockpit-ws',
       }
+      user { 'remove cockpit-wsinstance user':
+        ensure => absent,
+        name   => 'cockpit-wsinstance',
+      }
     }
     if $remove_root_bin_path {
       file_line { 'remove root bin path':
