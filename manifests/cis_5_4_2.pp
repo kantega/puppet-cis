@@ -11,10 +11,12 @@
 #   include cis::5_4_2
 class cis::cis_5_4_2 (
   Boolean $enforced = true,
+  Array[String] $exclude_users = [],
 ) {
   if $enforced {
     if $facts['cis_5_4_2'] != [] {
-      $facts['cis_5_4_2'].each | String $user | {
+      $users = $facts['cis_5_4_2'] - $exclude_users
+      $users.each | String $user | {
         exec { "nologin ${user}":
           command => "usermod -s /sbin/nologin ${user}",
           path    => '/sbin/',
