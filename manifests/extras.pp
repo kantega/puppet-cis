@@ -44,7 +44,10 @@ class cis::extras (
       }
     }
     if $disable_setroubleshoot {
-      package { 'setroubleshoot-plugins':
+      package { 'setroubleshoot-server':
+        ensure => absent,
+      }
+      ->package { 'setroubleshoot-plugins':
         ensure => absent,
       }
       file { '/etc/setroubleshoot':
