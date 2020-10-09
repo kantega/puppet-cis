@@ -27,10 +27,6 @@ class cis::cis_5_2_12 (
 
   if $enforced {
 
-    if $client_alive_interval > 300 or $client_alive_interval < 1 {
-      fail('The Client Alive Interval has been manually set past the 1 - 300 threshold')
-    }
-
     file_line { 'ssh alive interval':
       ensure => 'present',
       path   => '/etc/ssh/sshd_config',
