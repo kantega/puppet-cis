@@ -23,9 +23,9 @@
 # @example
 #   include cis::3_4_3
 class cis::cis_3_4_3 (
-  Boolean $enforced = true,
+  Boolean $enforced              = true,
   Array[String] $denied_networks = [],
-  Boolean $ensure = 'file',
+  Boolean $ensure                = file,
 ) {
 
   if $enforced {
