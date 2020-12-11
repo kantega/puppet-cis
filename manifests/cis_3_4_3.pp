@@ -25,7 +25,7 @@
 class cis::cis_3_4_3 (
   Boolean $enforced              = true,
   Array[String] $denied_networks = [],
-  Boolean $ensure                = file,
+  String $ensure                 = 'file',
 ) {
 
   if $enforced {
