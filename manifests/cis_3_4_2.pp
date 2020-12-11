@@ -26,6 +26,7 @@
 class cis::cis_3_4_2 (
   Boolean $enforced               = true,
   Array[String] $allowed_networks = [],
+  Boolean $ensure                 = 'file',
 ) {
 
   if $enforced {
@@ -39,7 +40,7 @@ class cis::cis_3_4_2 (
     }
     # This file manages both benchmarks 3_4_2 and 3_4_4
     file { '/etc/hosts.allow':
-      ensure  => file,
+      ensure  => $ensure,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',

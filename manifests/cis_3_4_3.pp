@@ -25,6 +25,7 @@
 class cis::cis_3_4_3 (
   Boolean $enforced = true,
   Array[String] $denied_networks = [],
+  Boolean $ensure = 'file',
 ) {
 
   if $enforced {
@@ -38,7 +39,7 @@ class cis::cis_3_4_3 (
 
     # This file manages both benchmarks 3_4_3 and 3_4_5
     file { '/etc/hosts.deny':
-      ensure  => file,
+      ensure  => $ensure,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
