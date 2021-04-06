@@ -15,7 +15,7 @@ class cis::cis_5_4_2 (
 ) {
   if $enforced {
     if $facts['cis_5_4_2'] != [] {
-      $users = $facts['cis_5_4_2'] - $exclude_users
+      $users = delete($facts['cis_5_4_2'],$exclude_users)
       $users.each | String $user | {
         exec { "nologin ${user}":
           command => "usermod -s /sbin/nologin ${user}",
